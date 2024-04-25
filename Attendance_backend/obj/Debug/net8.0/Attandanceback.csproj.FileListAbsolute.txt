@@ -1,0 +1,8 @@
+C:\Users\Administrator\Documents\Visual Studio 2022\FBN-DIL-Attendance-sys-BackEnd\WebApplication1\obj\Debug\net8.0\Attandanceback.csproj.AssemblyReference.cache
+C:\Users\Administrator\Documents\Visual Studio 2022\FBN-DIL-Attendance-sys-BackEnd\WebApplication1\obj\Debug\net8.0\Attandanceback.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Administrator\Documents\Visual Studio 2022\FBN-DIL-Attendance-sys-BackEnd\WebApplication1\obj\Debug\net8.0\Attandanceback.AssemblyInfoInputs.cache
+C:\Users\Administrator\Documents\Visual Studio 2022\FBN-DIL-Attendance-sys-BackEnd\WebApplication1\obj\Debug\net8.0\Attandanceback.AssemblyInfo.cs
+C:\Users\Administrator\Documents\Visual Studio 2022\FBN-DIL-Attendance-sys-BackEnd\WebApplication1\obj\Debug\net8.0\Attandanceback.csproj.CoreCompileInputs.cache
+C:\Users\Administrator\Documents\Visual Studio 2022\FBN-DIL-Attendance-sys-BackEnd\WebApplication1\obj\Debug\net8.0\Attandanceback.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Administrator\Documents\Visual Studio 2022\FBN-DIL-Attendance-sys-BackEnd\WebApplication1\obj\Debug\net8.0\Attandanceback.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Administrator\Documents\Visual Studio 2022\FBN-DIL-Attendance-sys-BackEnd\WebApplication1\obj\Debug\net8.0\Attandanceback.sourcelink.json
