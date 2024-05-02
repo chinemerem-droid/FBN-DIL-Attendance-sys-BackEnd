@@ -5,7 +5,7 @@ namespace Employee_History.Models
     public class Attendance_History
     {
         [Key]
-        public string StaffID { get; set; }
+        public string Staff_ID { get; set; }
         public TimeSpan EntryTime { get; set; }
         public TimeSpan ExitTime { get; set; }
         public DateTime Date { get; set; }

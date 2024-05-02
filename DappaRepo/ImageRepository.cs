@@ -14,7 +14,7 @@ namespace Employee_History.DappaRepo
             _connectionString = connectionString;
         }
 
-        public async Task<int> InsertImageAsync(ImageModel image,string StaffID)
+        public async Task<int> InsertImageAsync(ImageModel image,string Staff_ID)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -25,7 +25,7 @@ namespace Employee_History.DappaRepo
                     FileType = image.FileType,
                     FileSize = image.FileSize,
                     ImageData = image.ImageData,
-                    StaffID=image.StaffID,
+                    Staff_ID =image.Staff_ID,
                 };
                 return await connection.ExecuteAsync("InsertImage", parameters, commandType: CommandType.StoredProcedure);
             }

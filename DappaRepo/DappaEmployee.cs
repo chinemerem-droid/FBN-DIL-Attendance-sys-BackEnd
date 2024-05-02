@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Employee_History.Models;
 using Dapper;
+using System.Data;
 
 
 namespace Employee_History.DappaRepo
@@ -20,10 +21,10 @@ namespace Employee_History.DappaRepo
             return await _connection.QueryAsync<Attendance_History>("AllAttendance",commandType:System.Data.CommandType.StoredProcedure);
         }
 
-        public async Task<Attendance_History> GetAttendanceByID(string StaffID)
+        public async Task<Attendance_History> GetAttendanceByID(string Staff_ID)
         {
             var parameters = new DynamicParameters();
-            parameters.Add("@StaffID", StaffID);
+            parameters.Add("@Staff_ID", Staff_ID);
 
             return await _connection.QueryFirstOrDefaultAsync<Attendance_History>(@"AttById",parameters,commandType:System.Data.CommandType.StoredProcedure);
 
@@ -36,19 +37,19 @@ namespace Employee_History.DappaRepo
             return await _connection.QueryAsync<Attendance_History>(@"AttByDate", parameters, commandType: System.Data.CommandType.StoredProcedure);
         }
 
-        public async Task<Attendance_History> GetAttendanceByIDandDate(string StaffID, DateTime Date)
+        public async Task<Attendance_History> GetAttendanceByIDandDate(string Staff_ID, DateTime Date)
         {
             var parameters = new DynamicParameters();
-            parameters.Add("@StaffID", StaffID);
+            parameters.Add("@Staff_ID", Staff_ID);
             parameters.Add("@Date", Date);
 
             return await _connection.QueryFirstOrDefaultAsync<Attendance_History>(@"GetAttByStaffAndDate", parameters, commandType: System.Data.CommandType.StoredProcedure);
         }
 
-        public async Task<IEnumerable<Attendance_History>> GetAttendanceByIDbtwDates(string StaffID, DateTime StartDate, DateTime EndDate)
+        public async Task<IEnumerable<Attendance_History>> GetAttendanceByIDbtwDates(string Staff_ID, DateTime StartDate, DateTime EndDate)
         {
             var parameters = new DynamicParameters();
-            parameters.Add("@StaffID", StaffID);
+            parameters.Add("@Staff_ID", Staff_ID);
             parameters.Add("@StartDate", StartDate);
             parameters.Add("@EndDate", EndDate);
 
@@ -64,6 +65,26 @@ namespace Employee_History.DappaRepo
 
             // Return a list of Attendance_History objects
             return await _connection.QueryAsync<Attendance_History>(@"AttByDateRange", parameters, commandType: System.Data.CommandType.StoredProcedure);
+        }
+
+        public async Task<Attendance_History> Checkin(string Staff_ID)
+        {
+            var parameters=new DynamicParameters();
+            parameters.Add("@Staff_ID", Staff_ID);
+            return await _connection.QueryFirstOrDefaultAsync<Attendance_History>(@"AddCheckIn", parameters, commandType: System.Data.CommandType.StoredProcedure);
+
+        }
+        public async Task Checkout(string staff_ID)
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("@Staff_ID", staff_ID);
+
+            await _connection.ExecuteAsync("AddCheckOut", parameters, commandType: CommandType.StoredProcedure);
+        }
+
+        public async Task<IEnumerable<Attendance_History>> GetLateCheckinStaffAsync()
+        {
+            return await _connection.QueryAsync<Attendance_History>("GetLateCheckinStaff", commandType: System.Data.CommandType.StoredProcedure);
         }
 
 

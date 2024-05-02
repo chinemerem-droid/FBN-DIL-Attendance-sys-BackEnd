@@ -15,12 +15,12 @@ namespace Employee_History.Controllers
         }
 
         [HttpPost("AddUser")]
-        public async Task<IActionResult> AddUser(string StaffID, string Name, string Email, string Device, long Phone_number, string Lab_role, string Password)
+        public async Task<IActionResult> AddUser(string Staff_ID, string Name, string Email, string Device, long Phone_number, string Lab_role, string Password)
         {
             try
             {
                 // Call the repository method to add the user
-                var user = await dapperUser.AddUser(StaffID, Name, Email, Device, Phone_number, Lab_role, Password);
+                var user = await dapperUser.AddUser(Staff_ID, Name, Email, Device, Phone_number, Lab_role, Password);
                 return Ok("User added succesfully");
 
               
@@ -35,12 +35,12 @@ namespace Employee_History.Controllers
         }
 
         [HttpPost("RemoveUser")]
-        public async Task<IActionResult> RemoveUser(string StaffID)
+        public async Task<IActionResult> RemoveUser(string Staff_ID)
         {
             try
             {
                 // Call the repository method to add the user
-                var user = await dapperUser.RemoveUser(StaffID);
+                var user = await dapperUser.RemoveUser(Staff_ID);
                 return Ok("User removed successfully");
 
             }

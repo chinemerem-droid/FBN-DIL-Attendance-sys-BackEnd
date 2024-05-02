@@ -16,7 +16,7 @@ namespace Employee_History.Controllers
         }
 
         [HttpPost("upload")]
-        public async Task<IActionResult> UploadImage(IFormFile file, string StaffID)
+        public async Task<IActionResult> UploadImage(IFormFile file, string Staff_ID)
         {
             if (file == null || file.Length == 0)
             {
@@ -31,11 +31,11 @@ namespace Employee_History.Controllers
                 FileType = file.ContentType,
                 FileSize = file.Length,
                 ImageData = memoryStream.ToArray(),
-                 StaffID=StaffID.ToString()
+                Staff_ID = Staff_ID.ToString()
             };
 
             // Pass the StaffID argument obtained from the request or elsewhere
-            await _imageRepository.InsertImageAsync(image, StaffID);
+            await _imageRepository.InsertImageAsync(image, Staff_ID);
 
             return Ok("Image uploaded successfully");
         }

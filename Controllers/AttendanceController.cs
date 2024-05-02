@@ -28,11 +28,11 @@ namespace Employee_History.Controllers
         }
 
         [HttpGet("AttendanceByID")]
-        public async Task<Attendance_History> GetAttendanceByID(string StaffID)
+        public async Task<Attendance_History> GetAttendanceByID(string Staff_ID)
         {
             try
             {
-                var response = await dappaEmployee.GetAttendanceByID(StaffID);
+                var response = await dappaEmployee.GetAttendanceByID(Staff_ID);
                 if (response == null)
                 {
                     return null;
@@ -64,11 +64,11 @@ namespace Employee_History.Controllers
         }
 
         [HttpGet(" GetAttendanceByIDandDate")]
-        public async Task<Attendance_History> GetAttendanceByIDandDate(string StaffID, DateTime Date)
+        public async Task<Attendance_History> GetAttendanceByIDandDate(string Staff_ID, DateTime Date)
         {
             try
             {
-                var response = await dappaEmployee.GetAttendanceByIDandDate(StaffID,Date);
+                var response = await dappaEmployee.GetAttendanceByIDandDate(Staff_ID, Date);
                 if (response == null)
                 {
                     return null;
@@ -82,11 +82,11 @@ namespace Employee_History.Controllers
         }
 
         [HttpGet("GetAttendanceByIDbtwDates")]
-        public async Task<IEnumerable<Attendance_History>> GetAttendanceByIDbtwDates(string StaffID, DateTime startDate, DateTime endDate)
+        public async Task<IEnumerable<Attendance_History>> GetAttendanceByIDbtwDates(string Staff_ID, DateTime startDate, DateTime endDate)
         {
             try
             {
-                var response = await dappaEmployee.GetAttendanceByIDbtwDates(StaffID, startDate,endDate);
+                var response = await dappaEmployee.GetAttendanceByIDbtwDates(Staff_ID, startDate,endDate);
                 if (response == null)
                 {
                     return null;
@@ -117,15 +117,60 @@ namespace Employee_History.Controllers
             }
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Checkin(string Staff_ID)
+        {
+            try
+            {
+                // Call the repository method to add the user
+                var user = await dappaEmployee.Checkin(Staff_ID);
+                return Ok("User Checked in");
 
 
+            }
+            catch (Exception ex)
+            {
+
+                Console.WriteLine(ex);
+
+                return StatusCode(500, "An error occurred while processing your request");
+            }
+        }
+
+        [HttpPut]
+        public async Task<IActionResult> Checkout(string Staff_ID)
+        {
+            try
+            {
+                // Call the repository method to update the exit time
+                await dappaEmployee.Checkout(Staff_ID);
+
+                // Return a success message
+                return Ok("Exit time updated successfully");
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                Console.WriteLine(ex);
+
+                // Return a server error message
+                return StatusCode(500, "An error occurred while updating exit time");
+            }
+        }
+
+        [HttpGet("Late checkin")]
+        public async Task<IEnumerable<Attendance_History>> GetLateCheckinStaffAsync()
+        {
+            try
+            {
+                return await dappaEmployee.GetLateCheckinStaffAsync();
+            }
+            catch
+            {
+                throw;
+            }
+        }
 
 
-
-
-        /*  public IActionResult Index()
-          {
-              return View();
-          }*/
     }
 }

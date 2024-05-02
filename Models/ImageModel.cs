@@ -9,7 +9,7 @@ namespace Employee_History.Models
         public long FileSize { get; set; }
         public byte[] ImageData { get; set; }
         [Key]
-        public string? StaffID { get; set; }
+        public string? Staff_ID { get; set; }
     }
 
 }

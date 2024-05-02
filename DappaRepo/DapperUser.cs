@@ -15,10 +15,10 @@ namespace Employee_History.DappaRepo
             _connection = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
         }
 
-        public async Task<User> AddUser(string StaffID, string Name, string Email, string Device, long Phone_number, string Lab_role, string Password)
+        public async Task<User> AddUser(string Staff_ID, string Name, string Email, string Device, long Phone_number, string Lab_role, string Password)
         {
             var parameters = new DynamicParameters();
-            parameters.Add(@"StaffID", StaffID);
+            parameters.Add(@"Staff_ID", Staff_ID);
             parameters.Add(@"Name", Name);
             parameters.Add(@"Email", Email);
             parameters.Add(@"Device", Device);
@@ -28,10 +28,10 @@ namespace Employee_History.DappaRepo
             return await _connection.QueryFirstOrDefaultAsync<User>(@"AddUSer", parameters, commandType: System.Data.CommandType.StoredProcedure);
         }
 
-        public async Task<User> RemoveUser(string StaffID)
+        public async Task<User> RemoveUser(string Staff_ID)
         {
             var parameters = new DynamicParameters();
-            parameters.Add(@"StaffID", StaffID);
+            parameters.Add(@"Staff_ID", Staff_ID);
             return await _connection.QueryFirstOrDefaultAsync<User>(@"RemoveUSer", parameters, commandType: System.Data.CommandType.StoredProcedure);
         }
         public async Task<IEnumerable<User>> GetUsers()

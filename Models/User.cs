@@ -3,7 +3,7 @@
     public class User
     {
 
-        public string StaffID { get; set; }
+        public string Staff_ID { get; set; }
         public string? Name { get; set; }
 
         public string? Email { get; set; }
