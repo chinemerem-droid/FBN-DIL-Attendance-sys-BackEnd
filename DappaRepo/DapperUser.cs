@@ -5,7 +5,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Employee_History.DappaRepo
 {
-    public class DapperUser:IDapperUser
+    public class DapperUser : IDapperUser
     {
         private readonly IConfiguration _configuration;
         private readonly SqlConnection _connection;
@@ -15,7 +15,7 @@ namespace Employee_History.DappaRepo
             _connection = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
         }
 
-        public async Task<User> AddUser(string StaffID, string Name, string Email, string Device, long Phone_number, string Lab_role,string Password)
+        public async Task<User> AddUser(string StaffID, string Name, string Email, string Device, long Phone_number, string Lab_role, string Password)
         {
             var parameters = new DynamicParameters();
             parameters.Add(@"StaffID", StaffID);
@@ -33,6 +33,10 @@ namespace Employee_History.DappaRepo
             var parameters = new DynamicParameters();
             parameters.Add(@"StaffID", StaffID);
             return await _connection.QueryFirstOrDefaultAsync<User>(@"RemoveUSer", parameters, commandType: System.Data.CommandType.StoredProcedure);
+        }
+        public async Task<IEnumerable<User>> GetUsers()
+        {
+            return await _connection.QueryAsync<User>("AllUsers", commandType: System.Data.CommandType.StoredProcedure);
         }
     }
 }

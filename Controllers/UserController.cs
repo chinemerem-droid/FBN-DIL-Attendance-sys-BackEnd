@@ -21,24 +21,15 @@ namespace Employee_History.Controllers
             {
                 // Call the repository method to add the user
                 var user = await dapperUser.AddUser(StaffID, Name, Email, Device, Phone_number, Lab_role, Password);
+                return Ok("User added succesfully");
 
-                // Check if the user is added successfully
-                if (user != null)
-                {
-                    // Return success message
-                    return Ok("User added successfully");
-                }
-                else
-                {
-                    // Return appropriate error message if user addition fails
-                    return BadRequest("Failed to add user");
-                }
+              
             }
             catch (Exception ex)
             {
-                // Log the exception for troubleshooting
+               
                 Console.WriteLine(ex);
-                // Return appropriate error message if an exception occurs
+                
                 return StatusCode(500, "An error occurred while processing your request");
             }
         }
@@ -50,16 +41,8 @@ namespace Employee_History.Controllers
             {
                 // Call the repository method to add the user
                 var user = await dapperUser.RemoveUser(StaffID);
+                return Ok("User removed successfully");
 
-                // Check if the user is added successfully
-                if (user == null)
-                {
-                    return Ok("User Removed successfully");
-                }
-                else
-                {                 
-                    return BadRequest("Failed to Remove user");
-                }
             }
             catch (Exception ex)
             {
@@ -68,6 +51,18 @@ namespace Employee_History.Controllers
             }
         }
 
-       
+        [HttpGet("Added Users")]
+        public async Task<IEnumerable<User>> GetUsers()
+        {
+            try
+            {
+                return await dapperUser.GetUsers();
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
     }
 }
