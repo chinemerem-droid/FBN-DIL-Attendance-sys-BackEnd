@@ -8,8 +8,6 @@
 
         public string? Email { get; set; }
 
-        public string? Device { get; set; }
-
         public long Phone_number { get; set; }
 
         public string? Lab_role { get; set; }

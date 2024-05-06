@@ -49,5 +49,20 @@ namespace Employee_History.Controllers
             // Return image data
             return File(imageData, "image/jpeg"); // Assuming the image is JPEG format, change MIME type accordingly
         }
+
+        [HttpGet("image/{staffId}")]
+        public async Task<IActionResult> GetImage(string staffId)
+        {
+            var imageData = await _imageRepository.GetImageAsync(staffId);
+
+            if (imageData == null)
+            {
+                return NotFound(); // Return 404 if image data not found
+            }
+
+            // Return image data
+            return File(imageData, "image/jpeg"); // Assuming the image is JPEG format, change MIME type accordingly
+        }
+
     }
 }

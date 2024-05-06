@@ -3,7 +3,7 @@
     public class DeviceInfoModel
     {
         public string DeviceId { get; set; }
-        public int UserId { get; set; }
+        public string Staff_ID { get; set; }
         public string DeviceInfo { get; set; }
     }
 }

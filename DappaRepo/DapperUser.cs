@@ -2,6 +2,7 @@
 using Employee_History.Interface;
 using Employee_History.Models;
 using Microsoft.Data.SqlClient;
+using System.Data;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Employee_History.DappaRepo
@@ -16,16 +17,14 @@ namespace Employee_History.DappaRepo
             _connection = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
         }
 
-        public async Task<User> AddUser(string Staff_ID, string Name, string Email, string Device, long Phone_number, string Lab_role, string Password)
+        public async Task<User> AddUser(string Staff_ID, string Name, string Email, long Phone_number, string Lab_role)
         {
             var parameters = new DynamicParameters();
             parameters.Add(@"Staff_ID", Staff_ID);
             parameters.Add(@"Name", Name);
             parameters.Add(@"Email", Email);
-            parameters.Add(@"Device", Device);
             parameters.Add(@"Phone_number", Phone_number);
             parameters.Add(@"Lab_role", Lab_role);
-            parameters.Add(@"Password", Password);
             return await _connection.QueryFirstOrDefaultAsync<User>(@"AddUSer", parameters, commandType: System.Data.CommandType.StoredProcedure);
         }
 
@@ -38,6 +37,23 @@ namespace Employee_History.DappaRepo
         public async Task<IEnumerable<User>> GetUsers()
         {
             return await _connection.QueryAsync<User>("AllUsers", commandType: System.Data.CommandType.StoredProcedure);
+        }
+        public async Task<User> AddPassword(string Staff_ID, string Password)
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("@Staff_ID", Staff_ID);
+            parameters.Add("@Password", Password);
+
+            // Assuming _connection is your SqlConnection object
+            return await _connection.QueryFirstOrDefaultAsync<User>("AddPassword", parameters, commandType: CommandType.StoredProcedure);
+        }
+
+        public async Task<int> ConfirmPassword(string Staff_ID, string Password)
+        {
+            var parameters = new DynamicParameters();
+            parameters.Add("@Staff_ID", Staff_ID);
+            parameters.Add("@Password", Password);
+            return await _connection.ExecuteScalarAsync<int>("ConfirmPassword", parameters, commandType: CommandType.StoredProcedure);
         }
     }
 }
