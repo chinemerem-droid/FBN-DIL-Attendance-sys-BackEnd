@@ -2,6 +2,7 @@
 using Employee_History.Models;
 using Microsoft.AspNetCore.Mvc;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Employee_History.Interface;
 
 namespace Employee_History.Controllers
 {

@@ -1,5 +1,5 @@
 ﻿using Employee_History.Models;
-namespace Employee_History.DappaRepo
+namespace Employee_History.Interface
 {
     public interface ILeaveRepository
     {

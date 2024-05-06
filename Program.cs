@@ -1,4 +1,5 @@
 using Employee_History.DappaRepo;
+using Employee_History.Interface;
 using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);

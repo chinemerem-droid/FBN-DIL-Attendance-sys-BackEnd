@@ -3361,11 +3361,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Administrator\\Documents\\Visual Studio 2022\\Employee_History\\Employee_History.csproj",
+      "projectUniqueName": "C:\\Users\\Administrator\\Documents\\Visual Studio 2022\\FBN-DIL-Attendance-sys-BackEnd\\Employee_History.csproj",
       "projectName": "Employee_History",
-      "projectPath": "C:\\Users\\Administrator\\Documents\\Visual Studio 2022\\Employee_History\\Employee_History.csproj",
+      "projectPath": "C:\\Users\\Administrator\\Documents\\Visual Studio 2022\\FBN-DIL-Attendance-sys-BackEnd\\Employee_History.csproj",
       "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Administrator\\Documents\\Visual Studio 2022\\Employee_History\\obj\\",
+      "outputPath": "C:\\Users\\Administrator\\Documents\\Visual Studio 2022\\FBN-DIL-Attendance-sys-BackEnd\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

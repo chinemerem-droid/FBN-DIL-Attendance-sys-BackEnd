@@ -1,4 +1,4 @@
-﻿using Employee_History.DappaRepo;
+﻿using Employee_History.Interface;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Employee_History.Controllers

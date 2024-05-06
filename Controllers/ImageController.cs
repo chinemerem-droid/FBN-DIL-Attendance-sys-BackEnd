@@ -1,6 +1,7 @@
 ﻿using Employee_History.DappaRepo;
 using Employee_History.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Metadata.Ecma335;
 
 namespace Employee_History.Controllers
 {
@@ -15,14 +16,16 @@ namespace Employee_History.Controllers
             _imageRepository = imageRepository;
         }
 
-        [HttpPost("upload")]
-        public async Task<IActionResult> UploadImage(IFormFile file, string Staff_ID)
+
+        [HttpPost("image")]
+        public async Task<IActionResult> UploadAndGetImage(IFormFile file, string Staff_ID)
         {
             if (file == null || file.Length == 0)
             {
                 return BadRequest("Invalid file");
             }
 
+            // Upload image
             using var memoryStream = new MemoryStream();
             await file.CopyToAsync(memoryStream);
             var image = new ImageModel
@@ -33,11 +36,17 @@ namespace Employee_History.Controllers
                 ImageData = memoryStream.ToArray(),
                 Staff_ID = Staff_ID.ToString()
             };
-
-            // Pass the StaffID argument obtained from the request or elsewhere
             await _imageRepository.InsertImageAsync(image, Staff_ID);
+          
+            var imageData = await _imageRepository.GetImageAsync(Staff_ID);
 
-            return Ok("Image uploaded successfully");
+            if (imageData == null)
+            {
+                return NotFound(); // Return 404 if image data not found
+            }
+
+            // Return image data
+            return File(imageData, "image/jpeg"); // Assuming the image is JPEG format, change MIME type accordingly
         }
     }
 }

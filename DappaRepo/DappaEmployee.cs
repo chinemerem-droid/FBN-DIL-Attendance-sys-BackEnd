@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Employee_History.Models;
 using Dapper;
 using System.Data;
+using Employee_History.Interface;
 
 
 namespace Employee_History.DappaRepo

@@ -1,6 +1,6 @@
 ﻿using Employee_History.Models;
 
-namespace Employee_History.DappaRepo
+namespace Employee_History.Interface
 {
     public interface IDappaEmployee
     {
@@ -19,7 +19,6 @@ namespace Employee_History.DappaRepo
 
         public Task Checkout(string staff_ID);
         public Task<IEnumerable<Attendance_History>> GetLateCheckinStaffAsync();
-
 
     }
 }

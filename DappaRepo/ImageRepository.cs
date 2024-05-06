@@ -2,10 +2,11 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
 using Dapper;
+using Employee_History.Interface;
 
 namespace Employee_History.DappaRepo
 {
-    public class ImageRepository:IImageRepository
+    public class ImageRepository : IImageRepository
     {
         private readonly string _connectionString;
 
@@ -14,7 +15,7 @@ namespace Employee_History.DappaRepo
             _connectionString = connectionString;
         }
 
-        public async Task<int> InsertImageAsync(ImageModel image,string Staff_ID)
+        public async Task<int> InsertImageAsync(ImageModel image, string staffId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {
@@ -25,11 +26,25 @@ namespace Employee_History.DappaRepo
                     FileType = image.FileType,
                     FileSize = image.FileSize,
                     ImageData = image.ImageData,
-                    Staff_ID =image.Staff_ID,
+                    Staff_ID = staffId,
                 };
                 return await connection.ExecuteAsync("InsertImage", parameters, commandType: CommandType.StoredProcedure);
             }
         }
+
+        public async Task<byte[]> GetImageAsync(string staffId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                await connection.OpenAsync();
+
+                var parameters = new DynamicParameters();
+                parameters.Add("@Staff_ID", staffId);
+                var imageData = await connection.QueryFirstOrDefaultAsync<byte[]>("GetImageById", parameters, commandType: CommandType.StoredProcedure);
+                return imageData;
+            }
+        }
     }
+
 
 }

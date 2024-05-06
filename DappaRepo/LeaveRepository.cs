@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Employee_History.Interface;
 using Employee_History.Models;
 using Microsoft.Data.SqlClient;
 using System.Data;
