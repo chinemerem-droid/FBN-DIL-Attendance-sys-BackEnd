@@ -15,7 +15,7 @@ namespace Employee_History.DappaRepo
             _connectionString = connectionString;
         }
 
-        public async Task<int> InsertImageAsync(ImageModel image, string staffId)
+        public virtual async Task<int> InsertImageAsync(ImageModel image, string staffId)
         {
             using (var connection = new SqlConnection(_connectionString))
             {

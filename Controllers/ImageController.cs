@@ -1,4 +1,5 @@
 ﻿using Employee_History.DappaRepo;
+using Employee_History.Interface;
 using Employee_History.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection.Metadata.Ecma335;
@@ -9,9 +10,9 @@ namespace Employee_History.Controllers
     [ApiController]
     public class ImageController : ControllerBase
     {
-        private readonly ImageRepository _imageRepository;
+        private readonly IImageRepository _imageRepository;
 
-        public ImageController(ImageRepository imageRepository)
+        public ImageController(IImageRepository imageRepository)
         {
             _imageRepository = imageRepository;
         }
