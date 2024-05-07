@@ -1,5 +1,7 @@
 using Employee_History.DappaRepo;
 using Employee_History.Interface;
+using Employee_History.Models;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,7 +11,7 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IDappaEmployee, DappaEmployee>();
 builder.Services.AddScoped<ILeaveRepository, LeaveRepository>();
 builder.Services.AddScoped<IDapperUser, DapperUser>();
-builder.Services.AddScoped<IDeviceInfoRepository, DeviceInfoRepository>();
+builder.Services.AddScoped<IDeviceInfoRepository, DeviceInfoRepository>();;
 
 string connectionString = "Server=JULIUSBOT;Database=Attendance system;Trusted_Connection=True;MultipleActiveResultSets=true;Encrypt=False";
 builder.Services.AddScoped<IImageRepository>(provider => new ImageRepository(connectionString));

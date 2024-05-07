@@ -1,6 +1,11 @@
 ﻿using Employee_History.Interface;
 using Employee_History.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.IdentityModel.Tokens;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using System;
 
 namespace Employee_History.Controllers
 {
@@ -131,6 +136,64 @@ namespace Employee_History.Controllers
             }
         }
 
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(string staff_ID, string password)
+        {
+            // Authenticate user
+            var user = await dapperUser.AuthenticateAsync(staff_ID, password);
+
+            if (user == null)
+            {
+                return Unauthorized(); // Return 401 Unauthorized if authentication fails
+            }
+
+            // Check if user is approved
+            var isApproved = await dapperUser.IsUserApprovedAsync(staff_ID);
+            if (!isApproved)
+            {
+                return Forbid(); // Return 403 Forbidden if user is not approved
+            }
+
+ 
+            return Ok("Successfull login");
+        }
+
+        [HttpGet("nonapproved")]
+        public async Task<IActionResult> GetNonApprovedUsers()
+        {
+            try
+            {
+                var nonApprovedUsers = await dapperUser.GetNonApprovedAsync();
+                return Ok(nonApprovedUsers);
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
+
+        [HttpPost("approve")]
+        public async Task<IActionResult> ApproveUser(string staff_ID)
+        {
+            try
+            {
+                var rowsAffected = await dapperUser.ApproveUserAsync(staff_ID);
+                if (rowsAffected > 0)
+                {
+                    return Ok("User approval status updated successfully.");
+                }
+                else
+                {
+                    return NotFound("User not found or already approved.");
+                }
+            }
+            catch (Exception ex)
+            {
+                // Log the exception
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
+        }
 
 
     }

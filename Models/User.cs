@@ -14,5 +14,7 @@
 
         public string? Password { get; set; }
 
+        public bool ApprovalStatus { get; set; }
+
     }
 }

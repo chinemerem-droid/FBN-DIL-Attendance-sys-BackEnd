@@ -32,7 +32,7 @@ namespace Employee_History.DappaRepo
         {
             var parameters = new DynamicParameters();
             parameters.Add(@"Staff_ID", Staff_ID);
-            return await _connection.QueryFirstOrDefaultAsync<User>(@"RemoveUSer", parameters, commandType: System.Data.CommandType.StoredProcedure);
+            return await _connection.QueryFirstOrDefaultAsync<User>(@"RemoveUser", parameters, commandType: System.Data.CommandType.StoredProcedure);
         }
         public async Task<IEnumerable<User>> GetUsers()
         {
@@ -55,5 +55,45 @@ namespace Employee_History.DappaRepo
             parameters.Add("@Password", Password);
             return await _connection.ExecuteScalarAsync<int>("ConfirmPassword", parameters, commandType: CommandType.StoredProcedure);
         }
+
+
+        public async Task<bool> IsUserApprovedAsync(string staff_ID)
+        {
+            var sql = "SELECT ApprovalStatus FROM [User] WHERE Staff_ID = @Staff_ID";
+            var approvalStatus = await _connection.ExecuteScalarAsync<int?>(sql, new { Staff_ID = staff_ID });
+
+            if (approvalStatus.HasValue)
+            {
+                return approvalStatus.Value == 1;
+            }
+            else
+            {
+                // Handle the case where approvalStatus is null (not approved)
+                return false;
+            }
+        }
+
+
+
+        public async Task<User> AuthenticateAsync(string staff_ID, string password)
+        {
+            var sql = "SELECT * FROM [User] WHERE Staff_ID = @Staff_ID AND Password = @Password";
+            return await _connection.QueryFirstOrDefaultAsync<User>(sql, new { Staff_ID = staff_ID, Password = password });
+        }
+
+        public async Task<IEnumerable<User>> GetNonApprovedAsync()
+        {
+            var sql = "SELECT * FROM [User] WHERE ApprovalStatus = 0";
+            var nonApprovedUsers = await _connection.QueryAsync<User>(sql);
+            return nonApprovedUsers;
+        }
+
+        public async Task<int> ApproveUserAsync(string staff_ID)
+        {
+            var sql = "UPDATE [User] SET ApprovalStatus = 1 WHERE Staff_ID = @Staff_ID";
+            return await _connection.ExecuteAsync(sql, new { Staff_ID = staff_ID});
+        }
+
+
     }
 }
