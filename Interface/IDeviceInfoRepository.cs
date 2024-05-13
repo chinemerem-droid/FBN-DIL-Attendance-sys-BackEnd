@@ -5,6 +5,6 @@ namespace Employee_History.Interface
 {
     public interface IDeviceInfoRepository
     {
-        Task<int> AddDeviceInfoAsync(DeviceInfoModel deviceInfo);
+        public Task<int> StoreDeviceInfo(DeviceInfoModel deviceInfo);
     }
 }

@@ -16,11 +16,11 @@ namespace Employee_History.Controllers
             _deviceInfoRepository = deviceInfoRepository;
         }
 
-        [HttpPost]
+        [HttpPost("AddDeviceInfo")]
         public async Task<IActionResult> AddDeviceInfo(DeviceInfoModel deviceInfo)
         {
 
-            int resultCode = await _deviceInfoRepository.AddDeviceInfoAsync(deviceInfo);
+            int resultCode = await _deviceInfoRepository.StoreDeviceInfo(deviceInfo);
 
             if (resultCode == -1)
             {

@@ -56,7 +56,7 @@ namespace Employee_History.Controllers
             }
         }
 
-        [HttpGet("Added Users")]
+        [HttpGet("AddedUsers")]
         public async Task<IEnumerable<User>> GetUsers()
         {
             try
@@ -137,10 +137,10 @@ namespace Employee_History.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(string staff_ID, string password)
+        public async Task<IActionResult> Login(string staff_ID, string generatedCode)
         {
             // Authenticate user
-            var user = await dapperUser.AuthenticateAsync(staff_ID, password);
+            var user = await dapperUser.AuthenticateAsync(staff_ID, generatedCode);
 
             if (user == null)
             {
@@ -154,7 +154,7 @@ namespace Employee_History.Controllers
                 return Forbid(); // Return 403 Forbidden if user is not approved
             }
 
- 
+
             return Ok("Successfull login");
         }
 
@@ -193,6 +193,41 @@ namespace Employee_History.Controllers
                 // Log the exception
                 return StatusCode(500, "An error occurred while processing your request.");
             }
+        }
+
+        [HttpGet("ApprovalHistory")]
+        public async Task<IActionResult> GetApprovalData(int daysBehind)
+        {
+            var approvalData = await dapperUser.GetApprovalDataAsync(daysBehind);
+            return Ok(approvalData);
+        }
+
+        [HttpGet("DeletionHistory")]
+        public async Task<IActionResult> GetRemovalData(int daysBehind)
+        {
+            var removalData = await dapperUser.GetRemovalDataAsync(daysBehind);
+            return Ok(removalData);
+        }
+
+        [HttpGet("employeesByRole")]
+        public async Task<IActionResult> GetEmployeesByRoleID(string Lab_role)
+        {
+            try
+            {
+                var employees = await dapperUser.GetEmployeesByRoleIDAsync(Lab_role);
+                return Ok(employees);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        [HttpPost("GenerateCode")]
+        public async Task<string> InsertGeneratedCode(string Staff_ID)
+        {
+            var generatedCode = await dapperUser.InsertGeneratedCode(Staff_ID, HttpContext);
+            return generatedCode; // Or other appropriate IActionResult based on your needs
         }
 
 

@@ -18,7 +18,7 @@ namespace Employee_History.Controllers
         }
 
 
-        [HttpPost("image")]
+        [HttpPost("UploadImage")]
         public async Task<IActionResult> UploadAndGetImage(IFormFile file, string Staff_ID)
         {
             if (file == null || file.Length == 0)

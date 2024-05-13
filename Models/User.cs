@@ -12,9 +12,10 @@
 
         public string? Lab_role { get; set; }
 
-        public string? Password { get; set; }
-
         public bool ApprovalStatus { get; set; }
+        public string UserIPAddress { get; set; }
+        public string Code { get; set; }
+
 
     }
 }

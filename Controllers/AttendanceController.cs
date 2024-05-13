@@ -15,12 +15,13 @@ namespace Employee_History.Controllers
         {
             this.dappaEmployee = dappaEmployee;
         }
-        [HttpGet("Attendance History")]
-        public async Task<IEnumerable<Attendance_History>> GetAttendance() 
+        [HttpGet("AttendanceHistory")]
+        public async Task<IActionResult> GetAttendance() 
         {
             try
             {
-                return await dappaEmployee.GetAttendance();
+               var result=await dappaEmployee.GetAttendance();
+                return Ok(result);
             }
             catch
             {
@@ -46,7 +47,7 @@ namespace Employee_History.Controllers
             }
         }
 
-        [HttpGet("Attendance By Date ")]
+        [HttpGet("AttendanceByDate ")]
         public async Task<IEnumerable<Attendance_History>> GetAttendanceByDate(DateTime Date)
         {
             try
@@ -118,7 +119,7 @@ namespace Employee_History.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost("Checkin")]
         public async Task<IActionResult> Checkin(string Staff_ID)
         {
             try
@@ -138,7 +139,7 @@ namespace Employee_History.Controllers
             }
         }
 
-        [HttpPut]
+        [HttpPut("Checkout")]
         public async Task<IActionResult> Checkout(string Staff_ID)
         {
             try
@@ -159,7 +160,7 @@ namespace Employee_History.Controllers
             }
         }
 
-        [HttpGet("Late checkin")]
+        [HttpGet("Latecheckin")]
         public async Task<IEnumerable<Attendance_History>> GetLateCheckinStaffAsync()
         {
             try
