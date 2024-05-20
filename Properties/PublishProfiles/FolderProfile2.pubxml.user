@@ -4,8 +4,8 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 -->
 <Project>
   <PropertyGroup>
-    <_PublishTargetUrl>C:\Users\Administrator\OneDrive\Documents\ttendanc</_PublishTargetUrl>
-    <History>True|2024-05-10T05:12:32.9026508Z;</History>
+    <_PublishTargetUrl>C:\Users\Administrator\Documents\Visual Studio 2022\FBN-DIL-Attendance-sys-BackEnd\bin\Release\net8.0\final build</_PublishTargetUrl>
+    <History>True|2024-05-15T07:37:27.6304723Z;</History>
     <LastFailureDetails />
   </PropertyGroup>
 </Project>

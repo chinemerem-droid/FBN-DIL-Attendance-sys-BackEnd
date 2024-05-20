@@ -1,8 +1,8 @@
 using Employee_History.DappaRepo;
 using Employee_History.Interface;
 using Employee_History.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
+using FluentAssertions.Common;
+using System.Configuration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,25 +11,29 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<IDappaEmployee, DappaEmployee>();
 builder.Services.AddScoped<ILeaveRepository, LeaveRepository>();
 builder.Services.AddScoped<IDapperUser, DapperUser>();
-builder.Services.AddScoped<IDeviceInfoRepository, DeviceInfoRepository>();;
+builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddSingleton<LocationRange>();
 
-string connectionString = "Server=JULIUSBOT;Database=Attendance system;Trusted_Connection=True;MultipleActiveResultSets=true;Encrypt=False";
+// Configure connection string from appsettings.json
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddScoped<IImageRepository>(provider => new ImageRepository(connectionString));
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
+// Configure Swagger/OpenAPI
 builder.Services.AddSwaggerGen();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
+    });
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthorization();
 
 app.MapControllers();

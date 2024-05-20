@@ -19,7 +19,7 @@ namespace Employee_History.DappaRepo
         }
         public async Task<IEnumerable<Attendance_History>> GetAttendance()
         {
-            return await _connection.QueryAsync<Attendance_History>("AllAttendance",commandType:System.Data.CommandType.StoredProcedure);
+            return await _connection.QueryAsync<Attendance_History>("AllAttendance", commandType: System.Data.CommandType.StoredProcedure);
         }
 
         public async Task<Attendance_History> GetAttendanceByID(string Staff_ID)
@@ -27,7 +27,7 @@ namespace Employee_History.DappaRepo
             var parameters = new DynamicParameters();
             parameters.Add("@Staff_ID", Staff_ID);
 
-            return await _connection.QueryFirstOrDefaultAsync<Attendance_History>(@"AttById",parameters,commandType:System.Data.CommandType.StoredProcedure);
+            return await _connection.QueryFirstOrDefaultAsync<Attendance_History>(@"AttById", parameters, commandType: System.Data.CommandType.StoredProcedure);
 
         }
         public async Task<IEnumerable<Attendance_History>> GetAttendanceByDate(DateTime Date)
@@ -58,7 +58,7 @@ namespace Employee_History.DappaRepo
             return await _connection.QueryAsync<Attendance_History>(@"AttByIdANdDateRange", parameters, commandType: System.Data.CommandType.StoredProcedure);
         }
 
-        public async Task<IEnumerable<Attendance_History>> GetAttendancebtwDates( DateTime startDate, DateTime endDate)
+        public async Task<IEnumerable<Attendance_History>> GetAttendancebtwDates(DateTime startDate, DateTime endDate)
         {
             var parameters = new DynamicParameters();
             parameters.Add("@startDate", startDate);
@@ -70,10 +70,9 @@ namespace Employee_History.DappaRepo
 
         public async Task<Attendance_History> Checkin(string Staff_ID)
         {
-            var parameters=new DynamicParameters();
+            var parameters = new DynamicParameters();
             parameters.Add("@Staff_ID", Staff_ID);
-            return await _connection.QueryFirstOrDefaultAsync<Attendance_History>(@"AddCheckIn", parameters, commandType: System.Data.CommandType.StoredProcedure);
-
+            return await _connection.QueryFirstOrDefaultAsync<Attendance_History>("AddCheckIn", parameters, commandType: System.Data.CommandType.StoredProcedure);
         }
         public async Task Checkout(string staff_ID)
         {

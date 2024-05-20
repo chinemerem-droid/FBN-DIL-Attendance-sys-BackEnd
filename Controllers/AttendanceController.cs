@@ -16,11 +16,11 @@ namespace Employee_History.Controllers
             this.dappaEmployee = dappaEmployee;
         }
         [HttpGet("AttendanceHistory")]
-        public async Task<IActionResult> GetAttendance() 
+        public async Task<IActionResult> GetAttendance()
         {
             try
             {
-               var result=await dappaEmployee.GetAttendance();
+                var result = await dappaEmployee.GetAttendance();
                 return Ok(result);
             }
             catch
@@ -88,7 +88,7 @@ namespace Employee_History.Controllers
         {
             try
             {
-                var response = await dappaEmployee.GetAttendanceByIDbtwDates(Staff_ID, startDate,endDate);
+                var response = await dappaEmployee.GetAttendanceByIDbtwDates(Staff_ID, startDate, endDate);
                 if (response == null)
                 {
                     return null;
@@ -102,11 +102,11 @@ namespace Employee_History.Controllers
         }
 
         [HttpGet("GetAttendancebtwDates")]
-        public async Task<IEnumerable<Attendance_History>> GetAttendancebtwDates( DateTime startDate, DateTime endDate)
+        public async Task<IEnumerable<Attendance_History>> GetAttendancebtwDates(DateTime startDate, DateTime endDate)
         {
             try
             {
-                var response = await dappaEmployee.GetAttendancebtwDates( startDate, endDate);
+                var response = await dappaEmployee.GetAttendancebtwDates(startDate, endDate);
                 if (response == null)
                 {
                     return null;
@@ -118,26 +118,26 @@ namespace Employee_History.Controllers
                 throw;
             }
         }
+        /*
+                [HttpPost("Checkin")]
+                public async Task<IActionResult> Checkin(string Staff_ID)
+                {
+                    try
+                    {
+                        // Call the repository method to add the user
+                        var user = await dappaEmployee.Checkin(Staff_ID);
+                        return Ok("User Checked in");
 
-        [HttpPost("Checkin")]
-        public async Task<IActionResult> Checkin(string Staff_ID)
-        {
-            try
-            {
-                // Call the repository method to add the user
-                var user = await dappaEmployee.Checkin(Staff_ID);
-                return Ok("User Checked in");
 
+                    }
+                    catch (Exception ex)
+                    {
 
-            }
-            catch (Exception ex)
-            {
+                        Console.WriteLine(ex);
 
-                Console.WriteLine(ex);
-
-                return StatusCode(500, "An error occurred while processing your request");
-            }
-        }
+                        return StatusCode(500, "An error occurred while processing your request");
+                    }
+                }*/
 
         [HttpPut("Checkout")]
         public async Task<IActionResult> Checkout(string Staff_ID)

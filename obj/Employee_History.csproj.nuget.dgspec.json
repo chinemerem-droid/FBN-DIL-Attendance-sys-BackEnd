@@ -1,24 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Administrator\\Documents\\Visual Studio 2022\\FBN-DIL-Attendance-sys-BackEnd\\Employee_History.csproj": {}
+    "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\FBN-DIL-Attendance-sys-BackEnd\\Employee_History.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Administrator\\Documents\\Visual Studio 2022\\FBN-DIL-Attendance-sys-BackEnd\\Employee_History.csproj": {
+    "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\FBN-DIL-Attendance-sys-BackEnd\\Employee_History.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Administrator\\Documents\\Visual Studio 2022\\FBN-DIL-Attendance-sys-BackEnd\\Employee_History.csproj",
+        "projectUniqueName": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\FBN-DIL-Attendance-sys-BackEnd\\Employee_History.csproj",
         "projectName": "Employee_History",
-        "projectPath": "C:\\Users\\Administrator\\Documents\\Visual Studio 2022\\FBN-DIL-Attendance-sys-BackEnd\\Employee_History.csproj",
-        "packagesPath": "C:\\Users\\Administrator\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Administrator\\Documents\\Visual Studio 2022\\FBN-DIL-Attendance-sys-BackEnd\\obj\\",
+        "projectPath": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\FBN-DIL-Attendance-sys-BackEnd\\Employee_History.csproj",
+        "packagesPath": "C:\\Users\\Bot Peter\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\FBN-DIL-Attendance-sys-BackEnd\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\Administrator\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Users\\Bot Peter\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -56,6 +52,10 @@
             "FluentAssertions": {
               "target": "Package",
               "version": "[6.12.0, )"
+            },
+            "MailKit": {
+              "target": "Package",
+              "version": "[4.6.0, )"
             },
             "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
               "target": "Package",
@@ -115,7 +115,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.204/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.205/PortableRuntimeIdentifierGraph.json"
         }
       }
     }

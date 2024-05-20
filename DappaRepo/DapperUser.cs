@@ -1,30 +1,88 @@
 ﻿using Dapper;
 using Employee_History.Interface;
 using Employee_History.Models;
+using MailKit.Security;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
+using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
+using MimeKit.Text;
+using MimeKit;
+using System.Collections.Generic;
 using System.Data;
 using System.Security.Cryptography;
 using System.Text;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using Employee_History.Interface;
+using MailKit.Security;
+using MimeKit.Text;
+using MimeKit;
+using Employee_History.Models;
+using MailKit.Net.Smtp;
+using static Org.BouncyCastle.Math.EC.ECCurve;
 
 namespace Employee_History.DappaRepo
 {
+    public class EmailService : IEmailService
+    {
+        private readonly IConfiguration confige;
+
+        public EmailService(IConfiguration config)
+        {
+            confige = config;
+        }
+        public void SendEmail(Email request)
+        {
+            var email = new MimeMessage();
+            email.From.Add(MailboxAddress.Parse(confige.GetSection("EmailUsername").Value));
+            email.To.Add(MailboxAddress.Parse(request.To));
+            email.Subject = request.Subject;
+            email.Body = new TextPart(TextFormat.Plain) { Text = request.Body };
+
+            using (var client = new SmtpClient())
+            {
+                client.Connect(confige.GetSection("EmailHost").Value, 587, SecureSocketOptions.StartTls);
+                client.Authenticate(confige.GetSection("EmailUsername").Value, confige.GetSection("EmailPassword").Value);
+                client.Send(email);
+                client.Disconnect(true);
+            }
+        }
+        public void SendPasswordResetEmail(string email, string resetLink)
+        {
+            var emailMessage = new MimeMessage();
+            emailMessage.From.Add(MailboxAddress.Parse(confige.GetSection("EmailUsername").Value));
+            emailMessage.To.Add(MailboxAddress.Parse(email));
+            emailMessage.Subject = "Password Reset Request";
+            emailMessage.Body = new TextPart(TextFormat.Plain)
+            {
+                Text = $"Please reset your password using the following token: {resetLink}"
+            };
+
+            using (var client = new SmtpClient())
+            {
+                client.Connect(confige.GetSection("EmailHost").Value, 587, SecureSocketOptions.StartTls);
+                client.Authenticate(confige.GetSection("EmailUsername").Value, confige.GetSection("EmailPassword").Value);
+                client.Send(emailMessage);
+                client.Disconnect(true);
+            }
+        }
+    }
     public class DapperUser : IDapperUser
     {
         private readonly IConfiguration _configuration;
         private readonly SqlConnection _connection;
-        public DapperUser(IConfiguration configuration)
+        private readonly IEmailService _emailService;
+        public DapperUser(IConfiguration configuration, IEmailService emailService)
         {
             _configuration = configuration;
             _connection = new SqlConnection(configuration.GetConnectionString("DefaultConnection"));
+            _emailService = emailService;
         }
 
-        public async Task<User> AddUser(string Staff_ID, string Name, string Email, long Phone_number, string Lab_role)
-        {
-            // Hash the password
-          
+ 
 
+        public async Task<bool> AddUser(string Staff_ID, string Name, string Email, long Phone_number, string Lab_role)
+        {
             var parameters = new DynamicParameters();
             parameters.Add("@Staff_ID", Staff_ID);
             parameters.Add("@Name", Name);
@@ -32,6 +90,16 @@ namespace Employee_History.DappaRepo
             parameters.Add("@Phone_number", Phone_number);
             parameters.Add("@Lab_role", Lab_role);
 
+            string password = null;
+            if (Lab_role == "A1" || Lab_role == "B2")
+            {
+                // Generate a random password
+                password = GenerateRandomPassword(Staff_ID);
+
+                // Hash the password
+                string hashedPassword = HashPassword(password);
+                parameters.Add("@Password", hashedPassword);
+            }
 
             await _connection.OpenAsync();
 
@@ -43,20 +111,82 @@ namespace Employee_History.DappaRepo
                   VALUES (@Staff_ID, @Name, @Email, @Phone_number, @Lab_role, @Password);
                   SELECT * FROM [User] WHERE Staff_ID = @Staff_ID;";
 
-            var result = await _connection.QueryFirstOrDefaultAsync<User>(query, parameters);
+            var user = await _connection.QueryFirstOrDefaultAsync<User>(query, parameters);
 
-            return result;
+            if (password != null)
+            {
+                var emailRequest = new Email
+                {
+                    To = Email,
+                    Subject = "Your new password",
+                    Body = $"Your new password is: {password}"
+                };
+                _emailService.SendEmail(emailRequest);
+            }
+
+            return false ;
+
+        }
+        public async Task RequestPasswordResetAsync(string email)
+        {
+            var user = await _connection.QueryFirstOrDefaultAsync<User>(
+                "SELECT * FROM [User] WHERE Email = @Email", new { Email = email });
+
+            if (user != null)
+            {
+                string token = GeneratePasswordResetToken(user.Staff_ID);
+                string resetLink = $"{_configuration.GetSection("AppSettings:PasswordResetUrl").Value}?token={token}";
+
+                // Save the token to the database or an in-memory store
+                await _connection.ExecuteAsync(
+                    "INSERT INTO PasswordResetTokens (Staff_ID, Token, ExpiryDate) VALUES (@Staff_ID, @Token, DATEADD(hour, 1, GETUTCDATE()))",
+                    new { Staff_ID = user.Staff_ID, Token = token });
+
+                _emailService.SendPasswordResetEmail(email, resetLink);
+            }
+        }
+        private string GeneratePasswordResetToken(string Staff_ID)
+        {
+            using (var hmac = new HMACSHA256())
+            {
+                var tokenBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(Staff_ID + DateTime.UtcNow.ToString()));
+                // Convert the token bytes to Base64 string and take the first 5 characters
+                var tokenBase64 = Convert.ToBase64String(tokenBytes);
+                return tokenBase64.Substring(0, 5);
+            }
+        }
+
+
+        public async Task<bool> VerifyPasswordResetTokenAsync(string token, string newPassword)
+        {
+            var result = await _connection.QueryFirstOrDefaultAsync(
+                "SELECT Staff_ID FROM PasswordResetTokens WHERE Token = @Token AND ExpiryDate > GETUTCDATE()",
+                new { Token = token });
+
+            if (result != null)
+            {
+                var hashedPassword = HashPassword(newPassword);
+                await _connection.ExecuteAsync(
+                    "UPDATE [User] SET Password = @Password WHERE Staff_ID = @Staff_ID",
+                    new { Password = hashedPassword, Staff_ID = result.Staff_ID });
+
+                await _connection.ExecuteAsync(
+                    "DELETE FROM PasswordResetTokens WHERE Token = @Token",
+                    new { Token = token });
+
+                return true;
+            }
+
+            return false;
         }
         private string HashPassword(string password)
         {
-            // Generate a salt
             byte[] salt = new byte[128 / 8];
             using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(salt);
             }
 
-            // Hash the password
             string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
                 password: password,
                 salt: salt,
@@ -64,15 +194,37 @@ namespace Employee_History.DappaRepo
                 iterationCount: 10000,
                 numBytesRequested: 256 / 8));
 
-            // Format the hashed password with the salt
             return $"$bcrypt$v=2$rounds=10${Convert.ToBase64String(salt)}${hashed}";
         }
 
-        public async Task<User> RemoveUser(string Staff_ID)
+        private string GenerateRandomPassword(string Staff_ID)
         {
-            var parameters = new DynamicParameters();
-            parameters.Add(@"Staff_ID", Staff_ID);
-            return await _connection.QueryFirstOrDefaultAsync<User>(@"RemoveUser", parameters, commandType: System.Data.CommandType.StoredProcedure);
+            using (var sha256 = SHA256.Create())
+            {
+                byte[] staffIdBytes = Encoding.UTF8.GetBytes(Staff_ID);
+                byte[] hashBytes = sha256.ComputeHash(staffIdBytes);
+                StringBuilder passwordBuilder = new StringBuilder();
+
+                for (int i = 0; i < hashBytes.Length; i++)
+                {
+                    passwordBuilder.Append(hashBytes[i].ToString("X2")); // Convert each byte to a hex string
+                }
+
+                // Return the first 12 characters to make it a manageable password length
+                return passwordBuilder.ToString().Substring(0, 12);
+            }
+        }
+
+        public async Task<int> RemoveUser(string Staff_ID)
+        {
+            string sql = @"
+              UPDATE[User]
+            SET ApprovalStatus = 0,
+                RemovalDate = GETUTCDATE()
+            WHERE Staff_ID = @Staff_ID";
+            return await _connection.ExecuteAsync(sql, new { Staff_ID = Staff_ID });
+
+
         }
         public async Task<IEnumerable<User>> GetUsers()
         {
@@ -114,25 +266,71 @@ namespace Employee_History.DappaRepo
             }
         }
 
-        
 
-        public async Task<User> AuthenticateAsync(string staff_ID, string generatedCode)
+
+        public async Task<User> AuthenticateAsync(string staff_ID)
         {
             // SQL query to check if Staff_ID and generatedCode exist in the database
             var sql = @"
             SELECT *
             FROM [User]
-            WHERE Staff_ID = @Staff_ID AND Code = @GeneratedCode";
+            WHERE Staff_ID = @Staff_ID";
 
             // Execute the query and retrieve the user information
-            var user = await _connection.QueryFirstOrDefaultAsync<User>(sql, new { Staff_ID = staff_ID, GeneratedCode = generatedCode });
+            var user = await _connection.QueryFirstOrDefaultAsync<User>(sql, new { Staff_ID = staff_ID });
 
             // Return the authenticated user
             return user;
         }
 
+        public async Task<int> ApproveUserAsync(string staff_ID)
+        {
+            string sql = @"
+            UPDATE [User]
+            SET ApprovalStatus = 1,
+                ApprovalDate = GETUTCDATE()  -- Use GETUTCDATE() for UTC time
+            WHERE Staff_ID = @Staff_ID";
+            return await _connection.ExecuteAsync(sql, new { Staff_ID = staff_ID });
+        }
+
+        public async Task<int> StoreDeviceInfo(string Staff_ID, string DeviceID, string DeviceModel)
+        {
 
 
+            // Check if the Staff with provided Staff_ID exists
+            var existingStaff = await _connection.QueryFirstOrDefaultAsync<User>(
+            "SELECT * FROM [User] WHERE Staff_ID = @Staff_ID", new { Staff_ID = Staff_ID });
+
+            if (existingStaff == null)
+            {
+                return 0;
+            }
+            else
+            {
+
+                // Call the stored procedure to add or update device info
+                var rowsAffected = await _connection.ExecuteAsync("AddDeviceInfo",
+                    new { DeviceID = DeviceID, Staff_ID = Staff_ID, DeviceModel = DeviceModel },
+                    commandType: CommandType.StoredProcedure);
+                return rowsAffected;
+            }
+
+
+        }
+
+        /*        public async Task<decimal> GetUserLocationAsync(string StaffId)
+                {
+                    // Simulating fetching data from Flutter asynchronously
+                    await Task.Delay(1000); // Simulate network delay
+
+                    // For demonstration purposes, returning fixed values
+                    decimal longitude = 45.1234m;
+                    decimal latitude = -75.5678m;
+                    var location=longitude+latitude;
+
+                    return location;
+                }
+        */
 
         public async Task<IEnumerable<User>> GetNonApprovedAsync()
         {
@@ -141,11 +339,7 @@ namespace Employee_History.DappaRepo
             return nonApprovedUsers;
         }
 
-        public async Task<int> ApproveUserAsync(string staff_ID)
-        {
-            var sql = "UPDATE [User] SET ApprovalStatus = 1 WHERE Staff_ID = @Staff_ID";
-            return await _connection.ExecuteAsync(sql, new { Staff_ID = staff_ID});
-        }
+
         public async Task<IEnumerable<User>> GetApprovalDataAsync(int daysBehind)
         {
 
@@ -163,45 +357,12 @@ namespace Employee_History.DappaRepo
         }
         public async Task<IEnumerable<User>> GetEmployeesByRoleIDAsync(string Lab_role)
         {
-           
-                string query = "SELECT * FROM [User] WHERE Lab_role = @Lab_role";
-                return await _connection.QueryAsync<User>(query, new { Lab_role = Lab_role });
-            
+
+            string query = "SELECT * FROM [User] WHERE Lab_role = @Lab_role";
+            return await _connection.QueryAsync<User>(query, new { Lab_role = Lab_role });
+
         }
 
-        public async Task<string> InsertGeneratedCode(string Staff_ID, HttpContext httpContext)
-        {
-            using (var connection = new SqlConnection(_configuration.GetConnectionString("DefaultConnection")))
-            {
-                string ipAddress = httpContext.Connection.RemoteIpAddress.ToString();
-
-                var random = new Random();
-                var randomChars = "A$*$&#(B3324533CDEFGHIJK--=#%$7$LMNOP#%^&TUV$$W#X@YZ#0123456789";
-                var codeBuilder = new StringBuilder();
-
-                // Add staff ID to the code
-                codeBuilder.Append(random.Next(0, 100) + Staff_ID);
-
-                // Add random characters to the code
-                for (int i = 0; i < 4; i++)
-                {
-                    codeBuilder.Append(randomChars[random.Next(0, randomChars.Length)]);
-                }
-
-                var generatedCodeValue = codeBuilder.ToString();
-
-                var insertedCode = await connection.QuerySingleAsync<string>(
-                    @"UPDATE [User]
-                      SET Code = COALESCE(@Code, Code),
-                          UserIPAddress = COALESCE(@UserIPAddress, UserIPAddress)
-                      WHERE Staff_ID = @Staff_ID;
-                      SELECT Code FROM [User] WHERE Staff_ID = @Staff_ID;",
-                    new { Code = generatedCodeValue, Staff_ID, UserIPAddress = ipAddress });
-
-
-                return insertedCode; // Return the generated code as the response
-            }
-        }
 
 
 

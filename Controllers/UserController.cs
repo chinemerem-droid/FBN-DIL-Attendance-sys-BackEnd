@@ -6,6 +6,9 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System;
+using System.Reflection.Metadata.Ecma335;
+using Employee_History.DappaRepo;
+using Microsoft.AspNetCore.Identity.Data;
 
 namespace Employee_History.Controllers
 {
@@ -14,10 +17,51 @@ namespace Employee_History.Controllers
     public class UserController : Controller
     {
         private readonly IDapperUser dapperUser;
-        public UserController(IDapperUser dapperUser)
+        private readonly IDappaEmployee dappaEmployee;
+        private readonly LocationRange locationRange;
+        private readonly IConfiguration _configuration;
+        public UserController(IDapperUser dapperUser, LocationRange locationRange, IConfiguration configuration,IDappaEmployee dappaEmployee)
         {
             this.dapperUser = dapperUser;
+            this.dappaEmployee = dappaEmployee;
+            _configuration = configuration;
+            this.locationRange = locationRange;
         }
+        [HttpPost("checkin")]
+        public async Task<IActionResult> Checkin(string Staff_ID, string DeviceID, string DeviceModel, decimal longitude, decimal latitude)
+        {
+            // Retrieve user information
+            var user = await dapperUser.AuthenticateAsync(Staff_ID);
+            if (user == null)
+            {
+                return BadRequest("Invalid Staff ID");
+            }
+
+            // Check if device info matches the stored info
+            if (user.DeviceID != DeviceID || user.DeviceModel != DeviceModel)
+            {
+                return BadRequest("Device information does not match.");
+            }
+
+            // Check if location is within acceptable range
+            if (IsLocationInRange(longitude, latitude))
+            {
+                return BadRequest("Location is not within acceptable range.");
+            }
+
+            // If all checks pass, proceed with check-in
+            var attendanceHistory = await dappaEmployee.Checkin(Staff_ID);
+            return Ok(attendanceHistory);
+        }
+
+        private bool IsLocationInRange(decimal longitude, decimal latitude)
+        {
+            // Use injected LocationRange values
+            return longitude >= locationRange.MinLongitude && longitude <= locationRange.MaxLongitude &&
+                   latitude >= locationRange.MinLatitude && latitude <= locationRange.MaxLatitude;
+        }
+
+
 
         [HttpPost("AddUser")]
         public async Task<IActionResult> AddUser(string Staff_ID, string Name, string Email, long Phone_number, string Lab_role)
@@ -25,16 +69,16 @@ namespace Employee_History.Controllers
             try
             {
                 // Call the repository method to add the user
-                var user = await dapperUser.AddUser(Staff_ID, Name, Email,Phone_number, Lab_role);
+                var user = await dapperUser.AddUser(Staff_ID, Name, Email, Phone_number, Lab_role);
                 return Ok("User added succesfully");
 
-              
+
             }
             catch (Exception ex)
             {
-               
+
                 Console.WriteLine(ex);
-                
+
                 return StatusCode(500, "An error occurred while processing your request");
             }
         }
@@ -93,7 +137,7 @@ namespace Employee_History.Controllers
             catch (Exception ex)
             {
                 // Log the exception
-    
+
 
                 // Return appropriate error response
                 return StatusCode(500, "An error occurred while processing your request.");
@@ -137,26 +181,26 @@ namespace Employee_History.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login(string staff_ID, string generatedCode)
+        public async Task<IActionResult> Login(string Staff_ID, string DeviceID, string DeviceModel)
         {
-            // Authenticate user
-            var user = await dapperUser.AuthenticateAsync(staff_ID, generatedCode);
+            var user = await dapperUser.AuthenticateAsync(Staff_ID);
 
             if (user == null)
             {
-                return Unauthorized(); // Return 401 Unauthorized if authentication fails
+                return BadRequest("Invalid Staff ID");
             }
-
-            // Check if user is approved
-            var isApproved = await dapperUser.IsUserApprovedAsync(staff_ID);
+            var isApproved = await dapperUser.IsUserApprovedAsync(Staff_ID);
             if (!isApproved)
             {
-                return Forbid(); // Return 403 Forbidden if user is not approved
+                return BadRequest("User is not approved.");
             }
 
+            // If user is approved, store device info
+            await dapperUser.StoreDeviceInfo(Staff_ID, DeviceID, DeviceModel);
 
-            return Ok("Successfull login");
+            return Ok("Login successful and device info stored.");
         }
+
 
         [HttpGet("nonapproved")]
         public async Task<IActionResult> GetNonApprovedUsers()
@@ -223,12 +267,6 @@ namespace Employee_History.Controllers
             }
         }
 
-        [HttpPost("GenerateCode")]
-        public async Task<string> InsertGeneratedCode(string Staff_ID)
-        {
-            var generatedCode = await dapperUser.InsertGeneratedCode(Staff_ID, HttpContext);
-            return generatedCode; // Or other appropriate IActionResult based on your needs
-        }
 
 
     }

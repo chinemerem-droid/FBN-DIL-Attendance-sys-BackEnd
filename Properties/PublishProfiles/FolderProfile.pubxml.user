@@ -4,8 +4,8 @@ https://go.microsoft.com/fwlink/?LinkID=208121.
 -->
 <Project>
   <PropertyGroup>
-    <_PublishTargetUrl>C:\Users\Administrator\OneDrive\Documents\AttendanceSystem build</_PublishTargetUrl>
-    <History>True|2024-05-06T23:05:56.2693337Z;</History>
+    <_PublishTargetUrl>C:\Users\Administrator\OneDrive\Documents</_PublishTargetUrl>
+    <History>True|2024-05-15T07:30:45.0860473Z;</History>
     <LastFailureDetails />
   </PropertyGroup>
 </Project>

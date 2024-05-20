@@ -13,8 +13,12 @@
         public string? Lab_role { get; set; }
 
         public bool ApprovalStatus { get; set; }
-        public string UserIPAddress { get; set; }
-        public string Code { get; set; }
+        public string DeviceID { get; set; }
+        public string DeviceModel { get; set; }
+
+        public decimal Longitude { get; set; }
+        public decimal Latitude { get; set; }
+
 
 
     }
