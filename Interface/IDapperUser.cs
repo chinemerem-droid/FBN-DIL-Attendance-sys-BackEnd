@@ -13,6 +13,7 @@ namespace Employee_History.Interface
         public Task<int> ConfirmPassword(string Staff_ID, string Password);
 
         Task<bool> IsUserApprovedAsync(string staff_ID);
+        public Task<User> AdminAuthenticateAsync(string staff_ID,string Password);
         public Task<User> AuthenticateAsync(string staff_ID);
         public Task<IEnumerable<User>> GetNonApprovedAsync();
         Task<int> ApproveUserAsync(string staff_ID);

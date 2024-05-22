@@ -90,7 +90,9 @@ namespace Employee_History.DappaRepo
             parameters.Add("@Phone_number", Phone_number);
             parameters.Add("@Lab_role", Lab_role);
 
+            string query;
             string password = null;
+
             if (Lab_role == "A1" || Lab_role == "B2")
             {
                 // Generate a random password
@@ -99,19 +101,35 @@ namespace Employee_History.DappaRepo
                 // Hash the password
                 string hashedPassword = HashPassword(password);
                 parameters.Add("@Password", hashedPassword);
+
+                query = @"
+            IF EXISTS (SELECT 1 FROM [User] WHERE Staff_ID = @Staff_ID)
+            BEGIN
+                THROW 51000, 'Staff ID already exists.', 1;
+            END
+            INSERT INTO [User] (Staff_ID, Name, Email, Phone_number, Lab_role, Password) 
+            VALUES (@Staff_ID, @Name, @Email, @Phone_number, @Lab_role, @Password);
+            SELECT * FROM [User] WHERE Staff_ID = @Staff_ID;";
             }
-
+            else if (Lab_role == "C3")
+            {
+                query = @"
+            IF EXISTS (SELECT 1 FROM [User] WHERE Staff_ID = @Staff_ID)
+            BEGIN
+                THROW 51000, 'Staff ID already exists.', 1;
+            END
+            INSERT INTO [User] (Staff_ID, Name, Email, Phone_number, Lab_role) 
+            VALUES (@Staff_ID, @Name, @Email, @Phone_number, @Lab_role);
+            SELECT * FROM [User] WHERE Staff_ID = @Staff_ID;";
+            }
+            else
+            {
+                throw new ArgumentException("Invalid Lab_role specified.");
+            }
             await _connection.OpenAsync();
-
-            var query = @"IF EXISTS (SELECT 1 FROM [User] WHERE Staff_ID = @Staff_ID)
-                  BEGIN
-                    THROW 51000, 'Staff ID already exists.', 1;
-                  END;
-                  INSERT INTO [User] (Staff_ID, Name, Email, Phone_number, Lab_role, Password) 
-                  VALUES (@Staff_ID, @Name, @Email, @Phone_number, @Lab_role, @Password);
-                  SELECT * FROM [User] WHERE Staff_ID = @Staff_ID;";
-
             var user = await _connection.QueryFirstOrDefaultAsync<User>(query, parameters);
+
+
 
             if (password != null)
             {
@@ -281,6 +299,46 @@ namespace Employee_History.DappaRepo
 
             // Return the authenticated user
             return user;
+        }
+        public async Task<User> AdminAuthenticateAsync(string staff_ID, string password)
+        {
+            // SQL query to retrieve user information based on Staff_ID
+            var sql = @"
+            SELECT *
+            FROM [User]
+            WHERE Staff_ID = @Staff_ID";
+
+            // Execute the query and retrieve the user information
+            var user = await _connection.QueryFirstOrDefaultAsync<User>(sql, new { Staff_ID = staff_ID });
+
+            // If user is found, verify the password
+            if (user != null && VerifyPassword(password, user.Password))
+            {
+                return user;
+            }
+
+            // If authentication fails, return null
+            return null;
+        }
+
+        // Helper method to verify the password
+        private bool VerifyPassword(string inputPassword, string storedHashedPassword)
+        {
+            var parts = storedHashedPassword.Split('$');
+            if (parts.Length != 6 || parts[1] != "bcrypt" || parts[2] != "v=2" || parts[3] != "rounds=10")
+            {
+                return false;
+            }
+
+            byte[] salt = Convert.FromBase64String(parts[4]);
+            string hashedInputPassword = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: inputPassword,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 10000,
+                numBytesRequested: 256 / 8));
+
+            return hashedInputPassword == parts[5];
         }
 
         public async Task<int> ApproveUserAsync(string staff_ID)

@@ -6,6 +6,8 @@
         public string Staff_ID { get; set; }
         public string? Name { get; set; }
 
+        public string Password { get; set; } = string.Empty;
+
         public string? Email { get; set; }
 
         public long Phone_number { get; set; }

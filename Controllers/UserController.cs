@@ -201,6 +201,18 @@ namespace Employee_History.Controllers
             return Ok("Login successful and device info stored.");
         }
 
+        [HttpPost("loginAdmin")]
+        public async Task<IActionResult> LoginAdmin(string Staff_ID, string Password)
+        {
+            var user = await dapperUser.AdminAuthenticateAsync(Staff_ID, Password);
+
+            if (user == null)
+            {
+                return BadRequest("Invalid Staff ID or Password");
+            }
+            return Ok(user);
+        }
+
 
         [HttpGet("nonapproved")]
         public async Task<IActionResult> GetNonApprovedUsers()
