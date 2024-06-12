@@ -5,10 +5,9 @@ using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using System;
-using System.Reflection.Metadata.Ecma335;
-using Employee_History.DappaRepo;
-using Microsoft.AspNetCore.Identity.Data;
+using Microsoft.AspNetCore.Authorization;
+using System.Text.Json;
+using System.Data;
 
 namespace Employee_History.Controllers
 {
@@ -20,78 +19,105 @@ namespace Employee_History.Controllers
         private readonly IDappaEmployee dappaEmployee;
         private readonly LocationRange locationRange;
         private readonly IConfiguration _configuration;
-        public UserController(IDapperUser dapperUser, LocationRange locationRange, IConfiguration configuration,IDappaEmployee dappaEmployee)
+        private readonly string secretKey;
+
+        public UserController(IDapperUser dapperUser, LocationRange locationRange, IConfiguration configuration, IDappaEmployee dappaEmployee)
         {
             this.dapperUser = dapperUser;
             this.dappaEmployee = dappaEmployee;
             _configuration = configuration;
             this.locationRange = locationRange;
         }
+
+        [Authorize]
         [HttpPost("checkin")]
-        public async Task<IActionResult> Checkin(string Staff_ID, string DeviceID, string DeviceModel, decimal longitude, decimal latitude)
+        public async Task<IActionResult> Checkin([FromBody] User userModel)
         {
-            // Retrieve user information
-            var user = await dapperUser.AuthenticateAsync(Staff_ID);
-            if (user == null)
+            try
             {
-                return BadRequest("Invalid Staff ID");
-            }
+                var user = await dapperUser.AuthenticateAsync(userModel.Staff_ID);
+                if (user == null)
+                {
+                    return BadRequest("Invalid Staff ID");
+                }
 
-            // Check if device info matches the stored info
-            if (user.DeviceID != DeviceID || user.DeviceModel != DeviceModel)
+                if (user.DeviceID != userModel.DeviceID || user.DeviceModel != userModel.DeviceModel)
+                {
+                    return BadRequest("Device information does not match.");
+                }
+
+                if (!IsLocationInRange(userModel.Longitude, userModel.Latitude))
+                {
+                    return BadRequest("Location is not within acceptable range.");
+                }
+
+                var attendanceHistory = await dappaEmployee.Checkin(userModel.Staff_ID);
+                if (attendanceHistory == null)
+                {
+                    return StatusCode(500, "Failed to record check-in. Please try again.");
+                }
+
+                return Ok("Check-in successful");
+            }
+            catch (Exception ex)
             {
-                return BadRequest("Device information does not match.");
+                // Log the exception for troubleshooting
+                Console.WriteLine(ex);
+                return StatusCode(500, "An error occurred while processing your request.");
             }
-
-            // Check if location is within acceptable range
-            if (IsLocationInRange(longitude, latitude))
-            {
-                return BadRequest("Location is not within acceptable range.");
-            }
-
-            // If all checks pass, proceed with check-in
-            var attendanceHistory = await dappaEmployee.Checkin(Staff_ID);
-            return Ok(attendanceHistory);
         }
+
 
         private bool IsLocationInRange(decimal longitude, decimal latitude)
         {
-            // Use injected LocationRange values
-            return longitude >= locationRange.MinLongitude && longitude <= locationRange.MaxLongitude &&
-                   latitude >= locationRange.MinLatitude && latitude <= locationRange.MaxLatitude;
+            var minLongitude = _configuration.GetValue<decimal>("LocationRange:MinLongitude");
+            var maxLongitude = _configuration.GetValue<decimal>("LocationRange:MaxLongitude");
+            var minLatitude = _configuration.GetValue<decimal>("LocationRange:MinLatitude");
+            var maxLatitude = _configuration.GetValue<decimal>("LocationRange:MaxLatitude");
+
+            return longitude >= minLongitude && longitude <= maxLongitude &&
+                   latitude >= minLatitude && latitude <= maxLatitude;
         }
 
+        [Authorize]
+        [HttpGet("GetNotification")]
+        public async Task<IEnumerable<Notification>> GetNotification()
+        {
+            try
+            {
+                return await dapperUser.GetNotification();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
+        }
 
-
+        [Authorize]
         [HttpPost("AddUser")]
-        public async Task<IActionResult> AddUser(string Staff_ID, string Name, string Email, long Phone_number, string Lab_role)
+        public async Task<IActionResult> AddUser([FromBody] User userModel)
         {
             try
             {
-                // Call the repository method to add the user
-                var user = await dapperUser.AddUser(Staff_ID, Name, Email, Phone_number, Lab_role);
-                return Ok("User added succesfully");
-
-
+                await dapperUser.AddUser(userModel.Staff_ID, userModel.Name, userModel.Email, userModel.Phone_number, userModel.Lab_role);
+                return Ok("User added successfully");
             }
             catch (Exception ex)
             {
-
                 Console.WriteLine(ex);
-
                 return StatusCode(500, "An error occurred while processing your request");
             }
         }
 
+        [Authorize]
         [HttpPost("RemoveUser")]
-        public async Task<IActionResult> RemoveUser(string Staff_ID)
+        public async Task<IActionResult> RemoveUser([FromBody] User userModel)
         {
             try
             {
-                // Call the repository method to add the user
-                var user = await dapperUser.RemoveUser(Staff_ID);
+                await dapperUser.RemoveUser(userModel.Staff_ID);
                 return Ok("User removed successfully");
-
             }
             catch (Exception ex)
             {
@@ -100,6 +126,7 @@ namespace Employee_History.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("AddedUsers")]
         public async Task<IEnumerable<User>> GetUsers()
         {
@@ -107,58 +134,26 @@ namespace Employee_History.Controllers
             {
                 return await dapperUser.GetUsers();
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 throw;
             }
         }
-        [HttpPost("AddPassword")]
-        public async Task<IActionResult> AddPassword(string Staff_ID, string Password)
-        {
-            try
-            {
-                // Validate input parameters
-                if (string.IsNullOrEmpty(Staff_ID) || string.IsNullOrEmpty(Password))
-                {
-                    return BadRequest("Staff ID and password are required.");
-                }
 
-                // Call the repository method to add the user
-                var user = await dapperUser.AddPassword(Staff_ID, Password);
-                if (user != null)
-                {
-                    return Ok("User password added successfully.");
-                }
-                else
-                {
-                    return StatusCode(500, "Failed to add user password.");
-                }
-            }
-            catch (Exception ex)
-            {
-                // Log the exception
-
-
-                // Return appropriate error response
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
-        }
-
+        [Authorize]
         [HttpPost("ConfirmPassword")]
-        public async Task<IActionResult> ConfirmPassword(string Staff_ID, string Password)
+        public async Task<IActionResult> ConfirmPassword([FromBody] User userModel)
         {
             try
             {
-                // Validate input parameters
-                if (string.IsNullOrEmpty(Staff_ID) || string.IsNullOrEmpty(Password))
+                if (string.IsNullOrEmpty(userModel.Staff_ID) || string.IsNullOrEmpty(userModel.Password))
                 {
                     return BadRequest("Staff ID and password are required.");
                 }
 
-                // Call the repository method to confirm the password
-                int result = await dapperUser.ConfirmPassword(Staff_ID, Password);
+                int result = await dapperUser.ConfirmPassword(userModel.Staff_ID, userModel.Password);
 
-                // Check the result
                 if (result == 0)
                 {
                     return Ok("Password confirmed successfully.");
@@ -174,46 +169,63 @@ namespace Employee_History.Controllers
             }
             catch (Exception ex)
             {
-
-                // Return appropriate error response
+                Console.WriteLine(ex);
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
 
-        [HttpPost("login")]
-        public async Task<IActionResult> Login(string Staff_ID, string DeviceID, string DeviceModel)
+        [HttpPost("loginuser")]
+        public async Task<IActionResult> Login([FromBody] User userModel)
         {
-            var user = await dapperUser.AuthenticateAsync(Staff_ID);
-
-            if (user == null)
+            try
             {
-                return BadRequest("Invalid Staff ID");
+                if (string.IsNullOrEmpty(userModel.Staff_ID) || string.IsNullOrEmpty(userModel.DeviceID) || string.IsNullOrEmpty(userModel.DeviceModel))
+                {
+                    return BadRequest("Staff ID, Device ID, and Device Model are required.");
+                }
+
+                var user = await dapperUser.AuthenticateAsync(userModel.Staff_ID);
+                if (user == null)
+                {
+                    return BadRequest("Invalid Staff ID");
+                }
+
+                var isApproved = await dapperUser.IsUserApprovedAsync(userModel.Staff_ID);
+                if (!isApproved)
+                {
+                    return BadRequest("User is not approved.");
+                }
+
+                await dapperUser.StoreDeviceInfo(userModel.Staff_ID, userModel.DeviceID, userModel.DeviceModel);
+
+                var token = JwtTokenGenerator.GenerateToken(user, _configuration);
+
+                return Ok(new { message = "Login successful and device info stored.", token });
             }
-            var isApproved = await dapperUser.IsUserApprovedAsync(Staff_ID);
-            if (!isApproved)
+            catch (Exception ex)
             {
-                return BadRequest("User is not approved.");
+                return BadRequest("An error occurred during login: " + ex.Message);
             }
-
-            // If user is approved, store device info
-            await dapperUser.StoreDeviceInfo(Staff_ID, DeviceID, DeviceModel);
-
-            return Ok("Login successful and device info stored.");
         }
 
         [HttpPost("loginAdmin")]
-        public async Task<IActionResult> LoginAdmin(string Staff_ID, string Password)
+        public async Task<IActionResult> LoginAdmin([FromBody] User userModel)
         {
-            var user = await dapperUser.AdminAuthenticateAsync(Staff_ID, Password);
+            var user = await dapperUser.AdminAuthenticateAsync(userModel.Staff_ID, userModel.Password);
 
             if (user == null)
             {
-                return BadRequest("Invalid Staff ID or Password");
+                return BadRequest("Invalid Staff ID, Password, or insufficient role.");
             }
-            return Ok(user);
+
+            var token = JwtTokenGenerator.GenerateToken(user, _configuration);
+
+            return Ok(new { message = "Login successful", token });
         }
 
 
+
+        [Authorize]
         [HttpGet("nonapproved")]
         public async Task<IActionResult> GetNonApprovedUsers()
         {
@@ -224,17 +236,18 @@ namespace Employee_History.Controllers
             }
             catch (Exception ex)
             {
-                // Log the exception
+                Console.WriteLine(ex);
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
 
+        [Authorize]
         [HttpPost("approve")]
-        public async Task<IActionResult> ApproveUser(string staff_ID)
+        public async Task<IActionResult> ApproveUser([FromBody] User userModel)
         {
             try
             {
-                var rowsAffected = await dapperUser.ApproveUserAsync(staff_ID);
+                var rowsAffected = await dapperUser.ApproveUserAsync(userModel.Staff_ID);
                 if (rowsAffected > 0)
                 {
                     return Ok("User approval status updated successfully.");
@@ -246,23 +259,41 @@ namespace Employee_History.Controllers
             }
             catch (Exception ex)
             {
-                // Log the exception
+                Console.WriteLine(ex);
                 return StatusCode(500, "An error occurred while processing your request.");
             }
         }
 
+        [Authorize]
         [HttpGet("ApprovalHistory")]
         public async Task<IActionResult> GetApprovalData(int daysBehind)
         {
-            var approvalData = await dapperUser.GetApprovalDataAsync(daysBehind);
-            return Ok(approvalData);
+            try
+            {
+                var approvalData = await dapperUser.GetApprovalDataAsync(daysBehind);
+                return Ok(approvalData);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
 
+        [Authorize]
         [HttpGet("DeletionHistory")]
         public async Task<IActionResult> GetRemovalData(int daysBehind)
         {
-            var removalData = await dapperUser.GetRemovalDataAsync(daysBehind);
-            return Ok(removalData);
+            try
+            {
+                var removalData = await dapperUser.GetRemovalDataAsync(daysBehind);
+                return Ok(removalData);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500, "An error occurred while processing your request.");
+            }
         }
 
         [HttpGet("employeesByRole")]
@@ -275,11 +306,9 @@ namespace Employee_History.Controllers
             }
             catch (Exception ex)
             {
+                Console.WriteLine(ex);
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-
-
-
     }
 }

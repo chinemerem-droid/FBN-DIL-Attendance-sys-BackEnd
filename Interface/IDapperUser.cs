@@ -5,6 +5,7 @@ namespace Employee_History.Interface
 {
     public interface IDapperUser
     {
+        public Task<IEnumerable<Notification>> GetNotification();
         public Task<bool> AddUser(string Staff_ID, string Name, string Email, long Phone_number, string Lab_role);
         public Task<int> RemoveUser(string Staff_ID);
         public Task<IEnumerable<User>> GetUsers();

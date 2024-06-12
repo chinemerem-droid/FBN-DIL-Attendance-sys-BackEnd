@@ -7,6 +7,7 @@ using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using MailKit.Net.Smtp;
 using Employee_History.Interface;
 using Employee_History.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Mailkit.Controllers
 {
@@ -19,6 +20,7 @@ namespace Mailkit.Controllers
         {
             _emailService = emailService;
         }
+        [Authorize]
         [HttpPost]
         public IActionResult SendEmail(Email request)
         {

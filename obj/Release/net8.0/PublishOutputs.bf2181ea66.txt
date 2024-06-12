@@ -323,6 +323,7 @@ C:\Users\Bot Peter\Documents\Visual Studio 2022\FBN-DIL-Attendance-sys-BackEnd\o
 C:\Users\Bot Peter\Documents\Visual Studio 2022\FBN-DIL-Attendance-sys-BackEnd\obj\Release\net8.0\PubTmp\Out\Dapper.dll
 C:\Users\Bot Peter\Documents\Visual Studio 2022\FBN-DIL-Attendance-sys-BackEnd\obj\Release\net8.0\PubTmp\Out\FluentAssertions.dll
 C:\Users\Bot Peter\Documents\Visual Studio 2022\FBN-DIL-Attendance-sys-BackEnd\obj\Release\net8.0\PubTmp\Out\MailKit.dll
+C:\Users\Bot Peter\Documents\Visual Studio 2022\FBN-DIL-Attendance-sys-BackEnd\obj\Release\net8.0\PubTmp\Out\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\Bot Peter\Documents\Visual Studio 2022\FBN-DIL-Attendance-sys-BackEnd\obj\Release\net8.0\PubTmp\Out\Microsoft.AspNetCore.JsonPatch.dll
 C:\Users\Bot Peter\Documents\Visual Studio 2022\FBN-DIL-Attendance-sys-BackEnd\obj\Release\net8.0\PubTmp\Out\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 C:\Users\Bot Peter\Documents\Visual Studio 2022\FBN-DIL-Attendance-sys-BackEnd\obj\Release\net8.0\PubTmp\Out\Microsoft.AspNetCore.Mvc.Testing.dll

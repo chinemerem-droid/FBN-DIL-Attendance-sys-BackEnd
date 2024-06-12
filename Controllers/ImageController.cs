@@ -1,6 +1,7 @@
 ﻿using Employee_History.DappaRepo;
 using Employee_History.Interface;
 using Employee_History.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection.Metadata.Ecma335;
 
@@ -17,9 +18,9 @@ namespace Employee_History.Controllers
             _imageRepository = imageRepository;
         }
 
-
+        [Authorize]
         [HttpPost("UploadImage")]
-        public async Task<IActionResult> UploadAndGetImage(IFormFile file, string Staff_ID)
+        public async Task<IActionResult> UploadAndGetImage(IFormFile file, [FromBody] ImageModel model)
         {
             if (file == null || file.Length == 0)
             {
@@ -35,11 +36,11 @@ namespace Employee_History.Controllers
                 FileType = file.ContentType,
                 FileSize = file.Length,
                 ImageData = memoryStream.ToArray(),
-                Staff_ID = Staff_ID.ToString()
+                Staff_ID = model.Staff_ID.ToString()
             };
-            await _imageRepository.InsertImageAsync(image, Staff_ID);
+            await _imageRepository.InsertImageAsync(image, model.Staff_ID);
           
-            var imageData = await _imageRepository.GetImageAsync(Staff_ID);
+            var imageData = await _imageRepository.GetImageAsync(model.Staff_ID);
 
             if (imageData == null)
             {
@@ -49,11 +50,11 @@ namespace Employee_History.Controllers
             // Return image data
             return File(imageData, "image/jpeg"); // Assuming the image is JPEG format, change MIME type accordingly
         }
-
-        [HttpGet("image/{staffId}")]
-        public async Task<IActionResult> GetImage(string staffId)
+        [Authorize]
+        [HttpPost] // Change to POST
+        public async Task<IActionResult> GetImage([FromBody] ImageModel model)
         {
-            var imageData = await _imageRepository.GetImageAsync(staffId);
+            var imageData = await _imageRepository.GetImageAsync(model.Staff_ID);
 
             if (imageData == null)
             {
@@ -63,6 +64,7 @@ namespace Employee_History.Controllers
             // Return image data
             return File(imageData, "image/jpeg"); // Assuming the image is JPEG format, change MIME type accordingly
         }
+
 
     }
 }

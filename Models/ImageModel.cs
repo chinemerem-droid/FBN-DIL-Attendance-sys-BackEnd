@@ -4,12 +4,12 @@ namespace Employee_History.Models
 {
     public class ImageModel
     {
-        public string FileName { get; set; }
-        public string FileType { get; set; }
-        public long FileSize { get; set; }
-        public byte[] ImageData { get; set; }
+        public string FileName { get; set; } = string.Empty;
+        public string FileType { get; set; } = string.Empty;
+        public long FileSize { get; set; } = long.MinValue;
+        public byte[] ImageData { get; set; } = new byte[0];
         [Key]
-        public string? Staff_ID { get; set; }
+        public string Staff_ID { get; set; }
     }
 
 }

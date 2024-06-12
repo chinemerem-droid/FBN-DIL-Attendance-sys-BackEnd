@@ -1,26 +1,22 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\FBN-DIL-Attendance-sys-BackEnd\\",
+  "WorkspaceRootPath": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\Attendance-System\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|c:\\users\\bot peter\\documents\\visual studio 2022\\fbn-dil-attendance-sys-backend\\dapparepo\\dapperuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|solutionrelative:dapparepo\\dapperuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|c:\\users\\bot peter\\documents\\visual studio 2022\\attendance-system\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|c:\\users\\bot peter\\documents\\visual studio 2022\\fbn-dil-attendance-sys-backend\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|c:\\users\\bot peter\\documents\\visual studio 2022\\attendance-system\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|solutionrelative:controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|c:\\users\\bot peter\\documents\\visual studio 2022\\fbn-dil-attendance-sys-backend\\models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|solutionrelative:models\\user.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|c:\\users\\bot peter\\documents\\visual studio 2022\\attendance-system\\dapparepo\\dappaemployee.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|solutionrelative:dapparepo\\dappaemployee.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|c:\\users\\bot peter\\documents\\visual studio 2022\\fbn-dil-attendance-sys-backend\\interface\\idapperuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|c:\\users\\bot peter\\documents\\visual studio 2022\\attendance-system\\interface\\idapperuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|solutionrelative:interface\\idapperuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|c:\\users\\bot peter\\documents\\visual studio 2022\\fbn-dil-attendance-sys-backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
     }
   ],
   "DocumentGroupContainers": [
@@ -30,73 +26,75 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 5,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "DapperUser.cs",
-              "DocumentMoniker": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\FBN-DIL-Attendance-sys-BackEnd\\DappaRepo\\DapperUser.cs",
-              "RelativeDocumentMoniker": "DappaRepo\\DapperUser.cs",
-              "ToolTip": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\FBN-DIL-Attendance-sys-BackEnd\\DappaRepo\\DapperUser.cs*",
-              "RelativeToolTip": "DappaRepo\\DapperUser.cs*",
-              "ViewState": "AQIAAEMBAAAAAAAAAAAmwC4BAABYAAAA",
+              "DocumentIndex": 1,
+              "Title": "UserController.cs",
+              "DocumentMoniker": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\Attendance-System\\Controllers\\UserController.cs",
+              "RelativeDocumentMoniker": "Controllers\\UserController.cs",
+              "ToolTip": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\Attendance-System\\Controllers\\UserController.cs",
+              "RelativeToolTip": "Controllers\\UserController.cs",
+              "ViewState": "AQIAABsAAAAAAAAAAAAAAB8AAAAHAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-22T07:19:02.61Z",
+              "WhenOpened": "2024-05-22T14:46:52.088Z",
               "IsPinned": true,
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\Attendance-System\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\Attendance-System\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AQIAAAgAAAAAAAAAAAAIwA0AAAAYAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2024-06-12T12:24:24.166Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "DappaEmployee.cs",
+              "DocumentMoniker": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\Attendance-System\\DappaRepo\\DappaEmployee.cs",
+              "RelativeDocumentMoniker": "DappaRepo\\DappaEmployee.cs",
+              "ToolTip": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\Attendance-System\\DappaRepo\\DappaEmployee.cs",
+              "RelativeToolTip": "DappaRepo\\DappaEmployee.cs",
+              "ViewState": "AQIAAEcAAAAAAAAAAAAAAHoAAAAvAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-12T11:52:55.893Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 3,
               "Title": "IDapperUser.cs",
-              "DocumentMoniker": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\FBN-DIL-Attendance-sys-BackEnd\\Interface\\IDapperUser.cs",
+              "DocumentMoniker": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\Attendance-System\\Interface\\IDapperUser.cs",
               "RelativeDocumentMoniker": "Interface\\IDapperUser.cs",
-              "ToolTip": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\FBN-DIL-Attendance-sys-BackEnd\\Interface\\IDapperUser.cs*",
-              "RelativeToolTip": "Interface\\IDapperUser.cs*",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAowA8AAABQAAAA",
+              "ToolTip": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\Attendance-System\\Interface\\IDapperUser.cs",
+              "RelativeToolTip": "Interface\\IDapperUser.cs",
+              "ViewState": "AQIAAAMAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-22T07:46:24.916Z",
-              "IsPinned": true,
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "User.cs",
-              "DocumentMoniker": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\FBN-DIL-Attendance-sys-BackEnd\\Models\\User.cs",
-              "RelativeDocumentMoniker": "Models\\User.cs",
-              "ToolTip": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\FBN-DIL-Attendance-sys-BackEnd\\Models\\User.cs*",
-              "RelativeToolTip": "Models\\User.cs*",
-              "ViewState": "AQIAAAIAAAAAAAAAAAAxwAgAAAA8AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-22T08:02:57.39Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "UserController.cs",
-              "DocumentMoniker": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\FBN-DIL-Attendance-sys-BackEnd\\Controllers\\UserController.cs",
-              "RelativeDocumentMoniker": "Controllers\\UserController.cs",
-              "ToolTip": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\FBN-DIL-Attendance-sys-BackEnd\\Controllers\\UserController.cs*",
-              "RelativeToolTip": "Controllers\\UserController.cs*",
-              "ViewState": "AQIAAJMAAAAAAAAAAAAwwM4AAABTAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-22T07:40:32.182Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\FBN-DIL-Attendance-sys-BackEnd\\appsettings.json",
-              "RelativeDocumentMoniker": "appsettings.json",
-              "ToolTip": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\FBN-DIL-Attendance-sys-BackEnd\\appsettings.json",
-              "RelativeToolTip": "appsettings.json",
-              "ViewState": "AQIAAAYAAAAAAAAAAAAAABEAAAAUAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-05-21T16:59:53.178Z",
+              "WhenOpened": "2024-06-12T11:41:16.442Z",
               "EditorCaption": ""
             }
           ]

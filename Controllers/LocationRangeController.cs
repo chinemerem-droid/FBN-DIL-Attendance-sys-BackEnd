@@ -1,4 +1,5 @@
 ﻿using Employee_History.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Employee_History.Controllers
@@ -15,7 +16,7 @@ namespace Employee_History.Controllers
         {
             _configuration = configuration;
         }
-
+        [Authorize]
         [HttpGet]
         public async Task<IActionResult> GetLocationRange()
         {

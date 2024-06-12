@@ -935,3 +935,4 @@ C:\Users\Bot Peter\Documents\Visual Studio 2022\FBN-DIL-Attendance-sys-BackEnd\o
 C:\Users\Bot Peter\Documents\Visual Studio 2022\FBN-DIL-Attendance-sys-BackEnd\obj\Release\net8.0\Employee_History.pdb
 C:\Users\Bot Peter\Documents\Visual Studio 2022\FBN-DIL-Attendance-sys-BackEnd\obj\Release\net8.0\Employee_History.genruntimeconfig.cache
 C:\Users\Bot Peter\Documents\Visual Studio 2022\FBN-DIL-Attendance-sys-BackEnd\obj\Release\net8.0\ref\Employee_History.dll
+C:\Users\Bot Peter\Documents\Visual Studio 2022\FBN-DIL-Attendance-sys-BackEnd\bin\Release\net8.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll

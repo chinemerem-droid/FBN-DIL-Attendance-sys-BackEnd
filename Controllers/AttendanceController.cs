@@ -1,8 +1,11 @@
 ﻿using Employee_History.DappaRepo;
 using Employee_History.Models;
 using Microsoft.AspNetCore.Mvc;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 using Employee_History.Interface;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Employee_History.Controllers
 {
@@ -11,10 +14,12 @@ namespace Employee_History.Controllers
     public class AttendanceController : Controller
     {
         private readonly IDappaEmployee dappaEmployee;
+
         public AttendanceController(IDappaEmployee dappaEmployee)
         {
             this.dappaEmployee = dappaEmployee;
         }
+        [Authorize]
         [HttpGet("AttendanceHistory")]
         public async Task<IActionResult> GetAttendance()
         {
@@ -23,156 +28,120 @@ namespace Employee_History.Controllers
                 var result = await dappaEmployee.GetAttendance();
                 return Ok(result);
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-
-        [HttpGet("AttendanceByID")]
-        public async Task<Attendance_History> GetAttendanceByID(string Staff_ID)
+        [Authorize]
+        [HttpPost("AttendanceByID")]
+        public async Task<Attendance_History> GetAttendanceByID([FromBody] Attendance_History history)
         {
             try
             {
-                var response = await dappaEmployee.GetAttendanceByID(Staff_ID);
-                if (response == null)
-                {
-                    return null;
-                }
-                return response;
+                var response = await dappaEmployee.GetAttendanceByID(history.Staff_ID);
+                return response ?? null;
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                // Log exception if necessary
+                Console.WriteLine(ex);
+                return null; // Return null to maintain the original method signature
             }
         }
-
-        [HttpGet("AttendanceByDate ")]
-        public async Task<IEnumerable<Attendance_History>> GetAttendanceByDate(DateTime Date)
+        [Authorize]
+        [HttpPost("AttendanceByDate")]
+        public async Task<IEnumerable<Attendance_History>> GetAttendanceByDate([FromBody] Attendance_History history)
         {
             try
             {
-                var response = await dappaEmployee.GetAttendanceByDate(Date);
-                if (response == null)
-                {
-                    return null;
-                }
-                return response;
+                var response = await dappaEmployee.GetAttendanceByDate(history.Date);
+                return response ?? null;
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                // Log exception if necessary
+                Console.WriteLine(ex);
+                return null; // Return null to maintain the original method signature
             }
         }
-
-        [HttpGet(" GetAttendanceByIDandDate")]
-        public async Task<Attendance_History> GetAttendanceByIDandDate(string Staff_ID, DateTime Date)
+        [Authorize]
+        [HttpPost("GetAttendanceByIDandDate")]
+        public async Task<Attendance_History> GetAttendanceByIDandDate([FromBody] Attendance_History history)
         {
             try
             {
-                var response = await dappaEmployee.GetAttendanceByIDandDate(Staff_ID, Date);
-                if (response == null)
-                {
-                    return null;
-                }
-                return response;
+                var response = await dappaEmployee.GetAttendanceByIDandDate(history.Staff_ID, history.Date);
+                return response ?? null;
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                // Log exception if necessary
+                Console.WriteLine(ex);
+                return null; // Return null to maintain the original method signature
             }
         }
-
-        [HttpGet("GetAttendanceByIDbtwDates")]
-        public async Task<IEnumerable<Attendance_History>> GetAttendanceByIDbtwDates(string Staff_ID, DateTime startDate, DateTime endDate)
+        [Authorize]
+        [HttpPost("GetAttendanceByIDbtwDates")]
+        public async Task<IEnumerable<Attendance_History>> GetAttendanceByIDbtwDates([FromBody] Attendance_History history)
         {
             try
             {
-                var response = await dappaEmployee.GetAttendanceByIDbtwDates(Staff_ID, startDate, endDate);
-                if (response == null)
-                {
-                    return null;
-                }
-                return response;
+                var response = await dappaEmployee.GetAttendanceByIDbtwDates(history.Staff_ID, history.StartDate, history.EndDate);
+                return response ?? null;
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                // Log exception if necessary
+                Console.WriteLine(ex);
+                return null; // Return null to maintain the original method signature
             }
         }
-
-        [HttpGet("GetAttendancebtwDates")]
-        public async Task<IEnumerable<Attendance_History>> GetAttendancebtwDates(DateTime startDate, DateTime endDate)
+        [Authorize]
+        [HttpPost("GetAttendancebtwDates")]
+        public async Task<IEnumerable<Attendance_History>> GetAttendancebtwDates([FromBody] Attendance_History history)
         {
             try
             {
-                var response = await dappaEmployee.GetAttendancebtwDates(startDate, endDate);
-                if (response == null)
-                {
-                    return null;
-                }
-                return response;
+                var response = await dappaEmployee.GetAttendancebtwDates(history.StartDate, history.EndDate);
+                return response ?? null;
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                // Log exception if necessary
+                Console.WriteLine(ex);
+                return null; // Return null to maintain the original method signature
             }
         }
-        /*
-                [HttpPost("Checkin")]
-                public async Task<IActionResult> Checkin(string Staff_ID)
-                {
-                    try
-                    {
-                        // Call the repository method to add the user
-                        var user = await dappaEmployee.Checkin(Staff_ID);
-                        return Ok("User Checked in");
-
-
-                    }
-                    catch (Exception ex)
-                    {
-
-                        Console.WriteLine(ex);
-
-                        return StatusCode(500, "An error occurred while processing your request");
-                    }
-                }*/
-
+        [Authorize]
         [HttpPut("Checkout")]
-        public async Task<IActionResult> Checkout(string Staff_ID)
+        public async Task<IActionResult> Checkout([FromBody] Attendance_History history)
         {
             try
             {
-                // Call the repository method to update the exit time
-                await dappaEmployee.Checkout(Staff_ID);
-
-                // Return a success message
+                await dappaEmployee.Checkout(history.Staff_ID);
                 return Ok("Exit time updated successfully");
             }
             catch (Exception ex)
             {
-                // Log the exception
                 Console.WriteLine(ex);
-
-                // Return a server error message
                 return StatusCode(500, "An error occurred while updating exit time");
             }
         }
-
-        [HttpGet("Latecheckin")]
+        [Authorize]
+        [HttpPost("Latecheckin")]
         public async Task<IEnumerable<Attendance_History>> GetLateCheckinStaffAsync()
         {
             try
             {
                 return await dappaEmployee.GetLateCheckinStaffAsync();
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                // Log exception if necessary
+                Console.WriteLine(ex);
+                return null; // Return null to maintain the original method signature
             }
         }
-
-
     }
 }
