@@ -19,7 +19,7 @@ namespace Employee_History.Controllers
             _dapperUser = dapperUser;
             _emailService = emailService;
         }
-        [Authorize]
+      
         [HttpPost("request-reset")]
         public async Task<IActionResult> RequestPasswordReset([FromBody] PasswordResetRequest request)
         {
@@ -31,7 +31,7 @@ namespace Employee_History.Controllers
             await _dapperUser.RequestPasswordResetAsync(request.Email);
             return Ok("Password reset link has been sent to your email.");
         }
-        [Authorize]
+
         [HttpPost("reset")]
         public async Task<IActionResult> ResetPassword([FromBody] PasswordResetConfirmation request)
         {
@@ -40,7 +40,7 @@ namespace Employee_History.Controllers
                 return BadRequest("Token and new password are required.");
             }
 
-            bool isResetSuccessful = await _dapperUser.VerifyPasswordResetTokenAsync(request.Token, request.NewPassword);
+            bool isResetSuccessful = await _dapperUser.VerifyPasswordResetTokenAsync(request.email,request.Token, request.NewPassword);
             if (isResetSuccessful)
             {
                 return Ok("Password has been reset successfully.");

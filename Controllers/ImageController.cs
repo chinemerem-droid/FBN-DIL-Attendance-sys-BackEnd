@@ -18,7 +18,7 @@ namespace Employee_History.Controllers
             _imageRepository = imageRepository;
         }
 
-        [Authorize]
+  
         [HttpPost("UploadImage")]
         public async Task<IActionResult> UploadAndGetImage(IFormFile file, [FromBody] ImageModel model)
         {
@@ -50,7 +50,7 @@ namespace Employee_History.Controllers
             // Return image data
             return File(imageData, "image/jpeg"); // Assuming the image is JPEG format, change MIME type accordingly
         }
-        [Authorize]
+     
         [HttpPost] // Change to POST
         public async Task<IActionResult> GetImage([FromBody] ImageModel model)
         {

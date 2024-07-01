@@ -20,8 +20,7 @@ namespace Mailkit.Controllers
         {
             _emailService = emailService;
         }
-        [Authorize]
-        [HttpPost]
+         [HttpPost]
         public IActionResult SendEmail(Email request)
         {
              _emailService.SendEmail(request);

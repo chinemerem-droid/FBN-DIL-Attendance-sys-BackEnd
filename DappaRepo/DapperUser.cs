@@ -21,6 +21,7 @@ using Employee_History.Models;
 using MailKit.Net.Smtp;
 using static Org.BouncyCastle.Math.EC.ECCurve;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Microsoft.AspNetCore.Http;
 
 namespace Employee_History.DappaRepo
 {
@@ -134,13 +135,14 @@ namespace Employee_History.DappaRepo
                 throw new ArgumentException("Invalid Lab_role specified.");
             }
 
-          
-                try
-                {
-                    await _connection.OpenAsync();
 
-                    using (var transaction = _connection.BeginTransaction())
-                    {
+            try
+            {
+                await _connection.OpenAsync();
+
+                using (var transaction = _connection.BeginTransaction())
+                {
+                   
                         var user = await _connection.QueryFirstOrDefaultAsync<User>(
                             query, parameters, transaction);
 
@@ -151,8 +153,8 @@ namespace Employee_History.DappaRepo
                             notificationParameters.Add("@Message", $"{Staff_ID} waiting for approval");
 
                             string notificationQuery = @"
-                        INSERT INTO [Notification] (Staff_ID, Message) 
-                        VALUES (@Staff_ID, @Message);";
+                        INSERT INTO [Notification] (Staff_ID, Message,RoleID) 
+                        VALUES (@Staff_ID, @Message,'A1');";
 
                             await _connection.ExecuteAsync(notificationQuery, notificationParameters, transaction);
 
@@ -177,12 +179,13 @@ namespace Employee_History.DappaRepo
                             return false;
                         }
                     }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine(ex);
-                    return false;
-                }
+                
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return false;
+            }
             
         }
 
@@ -217,28 +220,38 @@ namespace Employee_History.DappaRepo
         }
 
 
-        public async Task<bool> VerifyPasswordResetTokenAsync(string token, string newPassword)
+        public async Task<bool> VerifyPasswordResetTokenAsync(string email, string token, string newPassword)
         {
             var result = await _connection.QueryFirstOrDefaultAsync(
-                "SELECT Staff_ID FROM PasswordResetTokens WHERE Token = @Token AND ExpiryDate > GETUTCDATE()",
+                "SELECT Staff_ID FROM PasswordResetTokens WHERE Token = @Token",
                 new { Token = token });
 
             if (result != null)
             {
-                var hashedPassword = HashPassword(newPassword);
-                await _connection.ExecuteAsync(
-                    "UPDATE [User] SET Password = @Password WHERE Staff_ID = @Staff_ID",
-                    new { Password = hashedPassword, Staff_ID = result.Staff_ID });
+                var user = await _connection.QueryFirstOrDefaultAsync<User>(
+                    "SELECT Email FROM [User] WHERE Staff_ID = @Staff_ID",
+                    new { Staff_ID = result.Staff_ID });
 
-                await _connection.ExecuteAsync(
-                    "DELETE FROM PasswordResetTokens WHERE Token = @Token",
-                    new { Token = token });
 
-                return true;
+                if (user != null && user.Email == email)
+                {
+
+                    var hashedPassword = HashPassword(newPassword);
+                    await _connection.ExecuteAsync(
+                        "UPDATE [User] SET Password = @Password WHERE Staff_ID = @Staff_ID",
+                        new { Password = hashedPassword, Staff_ID = result.Staff_ID });
+
+                    await _connection.ExecuteAsync(
+                        "DELETE FROM PasswordResetTokens WHERE Token = @Token",
+                        new { Token = token });
+
+                    return true;
+                }
             }
 
             return false;
         }
+
         private string HashPassword(string password)
         {
             byte[] salt = new byte[128 / 8];
@@ -277,12 +290,9 @@ namespace Employee_History.DappaRepo
 
         public async Task<int> RemoveUser(string Staff_ID)
         {
-            string sql = @"
-              UPDATE[User]
-            SET ApprovalStatus = 0,
-                RemovalDate = GETUTCDATE()
-            WHERE Staff_ID = @Staff_ID";
-            return await _connection.ExecuteAsync(sql, new { Staff_ID = Staff_ID });
+            string query = "DELETE FROM [User] WHERE Staff_ID = @StaffId";
+            var parameters = new { StaffId = Staff_ID };
+            return await _connection.ExecuteAsync(query, parameters);
 
 
         }
@@ -407,30 +417,70 @@ namespace Employee_History.DappaRepo
         public async Task<int> ApproveUserAsync(string staff_ID)
         {
             string sql = @"
-            BEGIN TRANSACTION;
+        BEGIN TRANSACTION;
 
-            BEGIN TRY
-                -- Update the user approval status and date
-                UPDATE [User]
-                SET ApprovalStatus = 1,
-                    ApprovalDate = GETUTCDATE()  -- Use GETUTCDATE() for UTC time
-                WHERE Staff_ID = @Staff_ID;
+BEGIN TRY
+    UPDATE [User]
+    SET ApprovalStatus = 1,
+        ApprovalDate = GETUTCDATE()  -- Use GETUTCDATE() for UTC time
+    WHERE Staff_ID = @Staff_ID;
 
-                -- Delete the corresponding notification
-                DELETE FROM [Notification]
-                WHERE Staff_ID = @Staff_ID;
+    UPDATE [Notification]
+    SET IsRead = 1
+    WHERE Staff_ID = @Staff_ID AND RoleID = 'A1';
 
-                -- Commit the transaction if both operations succeed
-                COMMIT TRANSACTION;
-            END TRY
-            BEGIN CATCH
-                -- Rollback the transaction if there is an error
-                ROLLBACK TRANSACTION;
-                -- Raise the error to the caller
-                THROW;
-            END CATCH";
+    INSERT INTO [Notification] (Staff_ID, IsRead, RoleID, Message)
+    VALUES (@Staff_ID, 0, 'B2', 'The staff with StaffID ' + CAST(@Staff_ID AS NVARCHAR) + ' has been approved');
+
+    -- Commit the transaction if all operations succeed
+    COMMIT TRANSACTION;
+END TRY
+BEGIN CATCH
+    -- Rollback the transaction if there is an error
+    ROLLBACK TRANSACTION;
+    -- Raise the error to the caller
+    THROW;
+END CATCH;
+";
+
 
             return await _connection.ExecuteAsync(sql, new { Staff_ID = staff_ID });
+        }
+        public async Task<int> DenyUserAsync(string staff_ID)
+        {
+            string sql = @"
+    BEGIN TRANSACTION;
+
+    BEGIN TRY
+        UPDATE [Notification]
+        SET IsRead = 1
+        WHERE Staff_ID = @Staff_ID AND RoleID = 'A1';
+
+        INSERT INTO [Notification] (Staff_ID, IsRead, RoleID, Message)
+        VALUES (@Staff_ID, 0, 'B2', 'The staff with StaffID ' + CAST(@Staff_ID AS NVARCHAR) + ' has been denied');
+
+        DELETE FROM [User]
+        WHERE Staff_ID = @Staff_ID;
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH;
+";
+
+            return await _connection.ExecuteAsync(sql, new { Staff_ID = staff_ID });
+        }
+        public async Task<int> ReadAsync(string Staff_ID,string RoleID)
+        {
+            string sql = @"
+            UPDATE [Notification]
+            SET IsRead = 1,
+            WHERE Staff_ID = @Staff_ID AND RoleID=@RoleID;
+                ";
+
+            return await _connection.ExecuteAsync(sql, new { Staff_ID = Staff_ID,RoleID=RoleID });
         }
 
 
@@ -481,21 +531,29 @@ namespace Employee_History.DappaRepo
         }
 
 
-        public async Task<IEnumerable<User>> GetApprovalDataAsync(int daysBehind)
+        public async Task<IEnumerable<User>> GetApprovalDataAsync()
         {
 
-            string query = "SELECT * FROM [User] WHERE ApprovalDate >= DATEADD(day, -@DaysBehind, GETDATE())";
-            return await _connection.QueryAsync<User>(query, new { DaysBehind = daysBehind });
+            string query = "SELECT * FROM [User] WHERE ApprovalStatus=1";
+            var results = await _connection.QueryAsync<User>(query);
+            return results;
+        }
+
+        public async Task<IEnumerable<User>> GetRemovalDataAsync()
+        {
+
+            string query = "SELECT name, Staff_ID, email, RemovalDate FROM [User] WHERE RemovalDate IS NOT NULL";
+            return await _connection.QueryAsync<User>(query);
 
         }
 
-        public async Task<IEnumerable<User>> GetRemovalDataAsync(int daysBehind)
+        public async Task<int> SetDatesToNullAsync(int staffId)
         {
-
-            string query = "SELECT * FROM [User] WHERE RemovalDate >= DATEADD(day, -@DaysBehind, GETDATE())";
-            return await _connection.QueryAsync<User>(query, new { DaysBehind = daysBehind });
-
+            string query = "UPDATE [User] SET ApprovalDate = NULL, RemovalDate = NULL WHERE Staff_ID = @StaffId";
+            var parameters = new { StaffId = staffId };
+            return await _connection.ExecuteAsync(query, parameters);
         }
+
         public async Task<IEnumerable<User>> GetEmployeesByRoleIDAsync(string Lab_role)
         {
 

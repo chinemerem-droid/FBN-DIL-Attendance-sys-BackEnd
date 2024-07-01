@@ -29,12 +29,14 @@ namespace Employee_History.Controllers
             this.locationRange = locationRange;
         }
 
-        [Authorize]
+  
         [HttpPost("checkin")]
         public async Task<IActionResult> Checkin([FromBody] User userModel)
         {
+            /*
             try
             {
+            */
                 var user = await dapperUser.AuthenticateAsync(userModel.Staff_ID);
                 if (user == null)
                 {
@@ -57,15 +59,18 @@ namespace Employee_History.Controllers
                     return StatusCode(500, "Failed to record check-in. Please try again.");
                 }
 
-                return Ok("Check-in successful");
+                return Ok(attendanceHistory);
+
+                /*
+                }
+
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                    return StatusCode(500, "An error occurred while processing your request.");
+                }
+                */
             }
-            catch (Exception ex)
-            {
-                // Log the exception for troubleshooting
-                Console.WriteLine(ex);
-                return StatusCode(500, "An error occurred while processing your request.");
-            }
-        }
 
 
         private bool IsLocationInRange(decimal longitude, decimal latitude)
@@ -79,7 +84,6 @@ namespace Employee_History.Controllers
                    latitude >= minLatitude && latitude <= maxLatitude;
         }
 
-        [Authorize]
         [HttpGet("GetNotification")]
         public async Task<IEnumerable<Notification>> GetNotification()
         {
@@ -94,7 +98,7 @@ namespace Employee_History.Controllers
             }
         }
 
-        [Authorize]
+      
         [HttpPost("AddUser")]
         public async Task<IActionResult> AddUser([FromBody] User userModel)
         {
@@ -110,7 +114,6 @@ namespace Employee_History.Controllers
             }
         }
 
-        [Authorize]
         [HttpPost("RemoveUser")]
         public async Task<IActionResult> RemoveUser([FromBody] User userModel)
         {
@@ -126,7 +129,37 @@ namespace Employee_History.Controllers
             }
         }
 
-        [Authorize]
+        [HttpPost("DenyUser")]
+        public async Task<IActionResult> DenyUser([FromBody] User userModel)
+        {
+            try
+            {
+                await dapperUser.DenyUserAsync(userModel.Staff_ID);
+                return Ok("User removed successfully");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500, "An error occurred while processing your request");
+            }
+        }
+
+        [HttpPost("MessageRead")]
+        public async Task<IActionResult> MessageRead([FromBody] User userModel)
+        {
+            try
+            {
+                await dapperUser.ReadAsync(userModel.Staff_ID,userModel.Lab_role);
+                return Ok("User removed successfully");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                return StatusCode(500, "An error occurred while processing your request");
+            }
+        }
+
+
         [HttpGet("AddedUsers")]
         public async Task<IEnumerable<User>> GetUsers()
         {
@@ -141,7 +174,6 @@ namespace Employee_History.Controllers
             }
         }
 
-        [Authorize]
         [HttpPost("ConfirmPassword")]
         public async Task<IActionResult> ConfirmPassword([FromBody] User userModel)
         {
@@ -225,7 +257,7 @@ namespace Employee_History.Controllers
 
 
 
-        [Authorize]
+     
         [HttpGet("nonapproved")]
         public async Task<IActionResult> GetNonApprovedUsers()
         {
@@ -241,7 +273,7 @@ namespace Employee_History.Controllers
             }
         }
 
-        [Authorize]
+      
         [HttpPost("approve")]
         public async Task<IActionResult> ApproveUser([FromBody] User userModel)
         {
@@ -264,13 +296,13 @@ namespace Employee_History.Controllers
             }
         }
 
-        [Authorize]
+      
         [HttpGet("ApprovalHistory")]
-        public async Task<IActionResult> GetApprovalData(int daysBehind)
+        public async Task<IActionResult> GetApprovalData()
         {
             try
             {
-                var approvalData = await dapperUser.GetApprovalDataAsync(daysBehind);
+                var approvalData = await dapperUser.GetApprovalDataAsync();
                 return Ok(approvalData);
             }
             catch (Exception ex)
@@ -280,13 +312,13 @@ namespace Employee_History.Controllers
             }
         }
 
-        [Authorize]
+    
         [HttpGet("DeletionHistory")]
-        public async Task<IActionResult> GetRemovalData(int daysBehind)
+        public async Task<IActionResult> GetRemovalData()
         {
             try
             {
-                var removalData = await dapperUser.GetRemovalDataAsync(daysBehind);
+                var removalData = await dapperUser.GetRemovalDataAsync();
                 return Ok(removalData);
             }
             catch (Exception ex)

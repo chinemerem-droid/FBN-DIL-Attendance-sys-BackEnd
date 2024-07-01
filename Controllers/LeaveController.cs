@@ -14,7 +14,7 @@ namespace Employee_History.Controllers
         {
             this.leaveRepository = leaveRepository;
         }
-        [Authorize]
+
         [HttpPost("request")]
         public async Task<IActionResult> RequestLeave([FromBody] LeaveRequest leave)
         {
@@ -28,7 +28,7 @@ namespace Employee_History.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-        [Authorize]
+    
         [HttpGet("Getrequests")]
         public async Task<IActionResult> GetLeaveRequests()
         {
@@ -42,7 +42,7 @@ namespace Employee_History.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
-        [Authorize]
+     
         [HttpPost("approve")]
         public async Task<IActionResult> ApproveLeaveRequest([FromBody] LeaveRequest leave)
         {

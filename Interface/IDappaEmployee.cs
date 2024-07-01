@@ -17,7 +17,7 @@ namespace Employee_History.Interface
 
         public Task<Attendance_History> Checkin(string Staff_ID);
 
-        public Task Checkout(string staff_ID);
+        public Task<Attendance_History> Checkout(string staff_ID);
         public Task<IEnumerable<Attendance_History>> GetLateCheckinStaffAsync();
 
     }

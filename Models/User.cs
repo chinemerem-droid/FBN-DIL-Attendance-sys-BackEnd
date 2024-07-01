@@ -15,6 +15,8 @@
         public string? Lab_role { get; set; } = string.Empty;
 
         public bool ApprovalStatus { get; set; } = false;
+        public DateTime ApprovalDate {  get; set; }= DateTime.MinValue;
+        public DateTime RemovalDate {  get; set; }= DateTime.MinValue;
         public string DeviceID { get; set; } = string.Empty;
         public string DeviceModel { get; set; } = string.Empty;
 
