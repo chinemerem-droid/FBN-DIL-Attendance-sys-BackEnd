@@ -5890,11 +5890,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\Attendance-System\\Employee_History.csproj",
+      "projectUniqueName": "C:\\Users\\Bot Peter\\Documents\\GitHub\\FBN-DIL-Attendance-sys-BackEnd\\Employee_History.csproj",
       "projectName": "Employee_History",
-      "projectPath": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\Attendance-System\\Employee_History.csproj",
+      "projectPath": "C:\\Users\\Bot Peter\\Documents\\GitHub\\FBN-DIL-Attendance-sys-BackEnd\\Employee_History.csproj",
       "packagesPath": "C:\\Users\\Bot Peter\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Bot Peter\\Documents\\Visual Studio 2022\\Attendance-System\\obj\\",
+      "outputPath": "C:\\Users\\Bot Peter\\Documents\\GitHub\\FBN-DIL-Attendance-sys-BackEnd\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\Bot Peter\\AppData\\Roaming\\NuGet\\NuGet.Config",
