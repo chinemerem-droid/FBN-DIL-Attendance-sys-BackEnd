@@ -279,7 +279,7 @@ namespace Employee_History.Controllers
         {
             try
             {
-                var rowsAffected = await dapperUser.ApproveUserAsync(userModel.Staff_ID);
+                var rowsAffected = await dapperUser.ApproveUserAsync(userModel.Staff_ID,userModel.Email);
                 if (rowsAffected > 0)
                 {
                     return Ok("User approval status updated successfully.");

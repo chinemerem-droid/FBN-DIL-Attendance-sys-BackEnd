@@ -3,20 +3,8 @@
   "WorkspaceRootPath": "C:\\Users\\Bot Peter\\Documents\\GitHub\\FBN-DIL-Attendance-sys-BackEnd\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|c:\\users\\bot peter\\documents\\github\\fbn-dil-attendance-sys-backend\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
-      "RelativeMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|c:\\users\\bot peter\\documents\\github\\fbn-dil-attendance-sys-backend\\controllers\\attendancecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|solutionrelative:controllers\\attendancecontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|c:\\users\\bot peter\\documents\\github\\fbn-dil-attendance-sys-backend\\dapparepo\\dappaemployee.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|solutionrelative:dapparepo\\dappaemployee.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|c:\\users\\bot peter\\documents\\github\\fbn-dil-attendance-sys-backend\\models\\attendance_history.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|solutionrelative:models\\attendance_history.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|c:\\users\\bot peter\\documents\\github\\fbn-dil-attendance-sys-backend\\dapparepo\\dapperuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|solutionrelative:dapparepo\\dapperuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|c:\\users\\bot peter\\documents\\github\\fbn-dil-attendance-sys-backend\\controllers\\usercontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
@@ -30,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 5,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Bookmark",
@@ -53,68 +41,34 @@
               "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             },
             {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d84ee353-0bef-5a41-a649-8f89aca5d84d}"
+            },
+            {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "appsettings.json",
-              "DocumentMoniker": "C:\\Users\\Bot Peter\\Documents\\GitHub\\FBN-DIL-Attendance-sys-BackEnd\\appsettings.json",
-              "RelativeDocumentMoniker": "appsettings.json",
-              "ToolTip": "C:\\Users\\Bot Peter\\Documents\\GitHub\\FBN-DIL-Attendance-sys-BackEnd\\appsettings.json",
-              "RelativeToolTip": "appsettings.json",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAA0AAAAYAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
-              "WhenOpened": "2024-07-19T18:38:14.526Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "Attendance_History.cs",
-              "DocumentMoniker": "C:\\Users\\Bot Peter\\Documents\\GitHub\\FBN-DIL-Attendance-sys-BackEnd\\Models\\Attendance_History.cs",
-              "RelativeDocumentMoniker": "Models\\Attendance_History.cs",
-              "ToolTip": "C:\\Users\\Bot Peter\\Documents\\GitHub\\FBN-DIL-Attendance-sys-BackEnd\\Models\\Attendance_History.cs",
-              "RelativeToolTip": "Models\\Attendance_History.cs",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAoAAAAqAAAA",
+              "Title": "DapperUser.cs",
+              "DocumentMoniker": "C:\\Users\\Bot Peter\\Documents\\GitHub\\FBN-DIL-Attendance-sys-BackEnd\\DappaRepo\\DapperUser.cs",
+              "RelativeDocumentMoniker": "DappaRepo\\DapperUser.cs",
+              "ToolTip": "C:\\Users\\Bot Peter\\Documents\\GitHub\\FBN-DIL-Attendance-sys-BackEnd\\DappaRepo\\DapperUser.cs",
+              "RelativeToolTip": "DappaRepo\\DapperUser.cs",
+              "ViewState": "AQIAAHYBAAAAAAAAAAAQwEUAAAAJAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-26T12:22:36.483Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "DappaEmployee.cs",
-              "DocumentMoniker": "C:\\Users\\Bot Peter\\Documents\\GitHub\\FBN-DIL-Attendance-sys-BackEnd\\DappaRepo\\DappaEmployee.cs",
-              "RelativeDocumentMoniker": "DappaRepo\\DappaEmployee.cs",
-              "ToolTip": "C:\\Users\\Bot Peter\\Documents\\GitHub\\FBN-DIL-Attendance-sys-BackEnd\\DappaRepo\\DappaEmployee.cs",
-              "RelativeToolTip": "DappaRepo\\DappaEmployee.cs",
-              "ViewState": "AQIAAEcAAAAAAAAAAAAAwJIAAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-25T21:02:40.02Z",
+              "WhenOpened": "2024-08-05T10:45:40.224Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "AttendanceController.cs",
-              "DocumentMoniker": "C:\\Users\\Bot Peter\\Documents\\GitHub\\FBN-DIL-Attendance-sys-BackEnd\\Controllers\\AttendanceController.cs",
-              "RelativeDocumentMoniker": "Controllers\\AttendanceController.cs",
-              "ToolTip": "C:\\Users\\Bot Peter\\Documents\\GitHub\\FBN-DIL-Attendance-sys-BackEnd\\Controllers\\AttendanceController.cs",
-              "RelativeToolTip": "Controllers\\AttendanceController.cs",
-              "ViewState": "AQIAAGEAAAAAAAAAAAAswHYAAABBAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-25T20:55:02.773Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
               "Title": "UserController.cs",
               "DocumentMoniker": "C:\\Users\\Bot Peter\\Documents\\GitHub\\FBN-DIL-Attendance-sys-BackEnd\\Controllers\\UserController.cs",
               "RelativeDocumentMoniker": "Controllers\\UserController.cs",
               "ToolTip": "C:\\Users\\Bot Peter\\Documents\\GitHub\\FBN-DIL-Attendance-sys-BackEnd\\Controllers\\UserController.cs",
               "RelativeToolTip": "Controllers\\UserController.cs",
-              "ViewState": "AQIAABwAAAAAAAAAAAAQwEsAAABLAAAA",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAACABAABLAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-25T20:34:32.805Z"
+              "WhenOpened": "2024-06-25T20:34:32.805Z",
+              "EditorCaption": ""
             }
           ]
         }

@@ -290,7 +290,7 @@ namespace Employee_History.DappaRepo
 
         public async Task<int> RemoveUser(string Staff_ID)
         {
-            string query = "DELETE FROM [User] WHERE Staff_ID = @StaffId";
+            string query = "UPDATE [User] SET ApprovalStatus = 0 WHERE Staff_ID = @StaffId";
             var parameters = new { StaffId = Staff_ID };
             return await _connection.ExecuteAsync(query, parameters);
 
@@ -414,37 +414,51 @@ namespace Employee_History.DappaRepo
             return hashedInputPassword == parts[5];
         }
 
-        public async Task<int> ApproveUserAsync(string staff_ID)
+        public async Task<int> ApproveUserAsync(string staff_ID, string Email)
         {
             string sql = @"
-        BEGIN TRANSACTION;
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        UPDATE [User]
+        SET ApprovalStatus = 1,
+            ApprovalDate = GETUTCDATE()
+        WHERE Staff_ID = @Staff_ID;
 
-BEGIN TRY
-    UPDATE [User]
-    SET ApprovalStatus = 1,
-        ApprovalDate = GETUTCDATE()  -- Use GETUTCDATE() for UTC time
-    WHERE Staff_ID = @Staff_ID;
+        UPDATE [Notification]
+        SET IsRead = 1
+        WHERE Staff_ID = @Staff_ID AND RoleID = 'A1';
 
-    UPDATE [Notification]
-    SET IsRead = 1
-    WHERE Staff_ID = @Staff_ID AND RoleID = 'A1';
+        INSERT INTO [Notification] (Staff_ID, IsRead, RoleID, Message)
+        VALUES (@Staff_ID, 0, 'B2', 'The staff with StaffID ' + CAST(@Staff_ID AS NVARCHAR) + ' has been approved');
 
-    INSERT INTO [Notification] (Staff_ID, IsRead, RoleID, Message)
-    VALUES (@Staff_ID, 0, 'B2', 'The staff with StaffID ' + CAST(@Staff_ID AS NVARCHAR) + ' has been approved');
-
-    -- Commit the transaction if all operations succeed
-    COMMIT TRANSACTION;
-END TRY
-BEGIN CATCH
-    -- Rollback the transaction if there is an error
-    ROLLBACK TRANSACTION;
-    -- Raise the error to the caller
-    THROW;
-END CATCH;
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        THROW;
+    END CATCH;
 ";
 
+            try
+            {
+                // Validate staff_ID and Email here (optional)
 
-            return await _connection.ExecuteAsync(sql, new { Staff_ID = staff_ID });
+                var emailRequest = new Email
+                {
+                    To = Email,
+                    Subject = "Approval",
+                    Body = $"You Have been Approved For the AMS web system"
+                };
+                _emailService.SendEmail(emailRequest);
+
+                return await _connection.ExecuteAsync(sql, new { Staff_ID = staff_ID });
+            }
+            catch (Exception ex)
+            {
+                // Log the error or handle it appropriately
+                Console.WriteLine($"Error approving user: {ex.Message}");
+                throw; // Re-throw the exception to the caller
+            }
         }
         public async Task<int> DenyUserAsync(string staff_ID)
         {
@@ -508,20 +522,6 @@ END CATCH;
 
 
         }
-
-        /*        public async Task<decimal> GetUserLocationAsync(string StaffId)
-                {
-                    // Simulating fetching data from Flutter asynchronously
-                    await Task.Delay(1000); // Simulate network delay
-
-                    // For demonstration purposes, returning fixed values
-                    decimal longitude = 45.1234m;
-                    decimal latitude = -75.5678m;
-                    var location=longitude+latitude;
-
-                    return location;
-                }
-        */
 
         public async Task<IEnumerable<User>> GetNonApprovedAsync()
         {

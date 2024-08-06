@@ -1,9 +1,11 @@
 ﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using Employee_History.Models;
 using Dapper;
 using System.Data;
+using Employee_History.Models;
 using Employee_History.Interface;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Employee_History.DappaRepo
 {
@@ -11,6 +13,7 @@ namespace Employee_History.DappaRepo
     {
         private readonly IConfiguration _configuration;
         private readonly SqlConnection _connection;
+
         public DappaEmployee(IConfiguration configuration)
         {
             _configuration = configuration;
@@ -76,14 +79,11 @@ namespace Employee_History.DappaRepo
             return result;
         }
 
-
         public async Task<Attendance_History> Checkin(string Staff_ID)
         {
             var currentDate = DateTime.Now.Date;
-            var entryTime = DateTime.Now.ToString("HH:mm:ss");
+            var entryTime = DateTime.Now.TimeOfDay;
             var statusTime = DateTime.Now.TimeOfDay;
-            var month = currentDate.Month;
-            var year = currentDate.Year;
 
             var existingEntry = await _connection.QueryFirstOrDefaultAsync<Attendance_History>(
                 @"SELECT * 
@@ -98,66 +98,93 @@ namespace Employee_History.DappaRepo
                 // Update the existing record
                 await _connection.ExecuteAsync(
                     @"UPDATE Attendance_History 
-              SET EntryTime = @entryTime, CheckinStatus = @status, Month = @month, Year = @year
+              SET EntryTime = @entryTime, CheckinStatus = @status
               WHERE Staff_ID = @Staff_ID AND Date = @currentDate",
-                    new { Staff_ID, entryTime, currentDate, status, month, year });
+                    new { Staff_ID, entryTime, currentDate, status});
 
-                // Return the updated record
-                return await _connection.QueryFirstOrDefaultAsync<Attendance_History>(
+                // Return the updated record with converted times
+                var updatedEntry = await _connection.QueryFirstOrDefaultAsync<Attendance_History>(
                     @"SELECT * 
               FROM Attendance_History 
               WHERE Staff_ID = @Staff_ID AND Date = @currentDate",
                     new { Staff_ID, currentDate });
+
+                // Create a new instance with converted times
+                return new Attendance_History
+                {
+                    Staff_ID = updatedEntry.Staff_ID,
+                    EntryTime = updatedEntry.EntryTime,
+                    ExitTime = updatedEntry.ExitTime,
+                    Date = updatedEntry.Date,
+                    Month = updatedEntry.Month,
+                    Year = updatedEntry.Year,
+                    CheckinStatus = updatedEntry.CheckinStatus
+                };
             }
             else
             {
                 // Insert a new record
                 await _connection.ExecuteAsync(
-                    @"INSERT INTO Attendance_History (Staff_ID, EntryTime, ExitTime, Date, Month, Year, CheckinStatus)
-              VALUES (@Staff_ID, @entryTime, NULL, @currentDate, @month, @year, @status)",
-                    new { Staff_ID, entryTime, currentDate, month, year, status });
+                    @"INSERT INTO Attendance_History (Staff_ID, EntryTime, ExitTime, Date,CheckinStatus)
+              VALUES (@Staff_ID, @entryTime, NULL, @currentDate,@status)",
+                    new { Staff_ID, entryTime, currentDate,status });
 
-                // Return the newly created record
-                return await _connection.QueryFirstOrDefaultAsync<Attendance_History>(
+                // Return the newly created record with converted times
+                var newEntry = await _connection.QueryFirstOrDefaultAsync<Attendance_History>(
                     @"SELECT * 
               FROM Attendance_History 
               WHERE Staff_ID = @Staff_ID AND Date = @currentDate",
                     new { Staff_ID, currentDate });
+
+                // Create a new instance with converted times
+                return new Attendance_History
+                {
+                    Staff_ID = newEntry.Staff_ID,
+                    EntryTime = newEntry.EntryTime,
+                    ExitTime = newEntry.ExitTime,
+                    Date = newEntry.Date,
+                    Month = newEntry.Month,
+                    Year = newEntry.Year,
+                    CheckinStatus = newEntry.CheckinStatus
+                };
             }
         }
-
-
-
-
 
         public async Task<Attendance_History> Checkout(string staff_ID)
         {
             try
             {
-                string entryTime = null;
                 var currentDate = DateTime.Now.Date;
-                var ExitTime = DateTime.Now.ToString("HH:mm:ss");
-
+                var exitTime = DateTime.Now.TimeOfDay;
 
                 var rowsAffected = await _connection.ExecuteAsync(@"
-                  UPDATE Attendance_History
-                  SET ExitTime = @ExitTime
-                  WHERE Staff_ID = @staff_ID AND CAST(Date AS DATE) = @currentDate",
-                  new { staff_ID, currentDate,ExitTime });
+          UPDATE Attendance_History
+          SET ExitTime = @exitTime
+          WHERE Staff_ID = @staff_ID AND CAST(Date AS DATE) = @currentDate",
+                  new { staff_ID, currentDate, exitTime });
 
-               
                 if (rowsAffected == 0)
                 {
-                    return null; 
+                    return null;
                 }
 
                 var attendanceHistory = await _connection.QueryFirstOrDefaultAsync<Attendance_History>(@"
-                  SELECT *
-                  FROM Attendance_History
-                  WHERE Staff_ID = @staff_ID AND Date = @currentDate",
+          SELECT *
+          FROM Attendance_History
+          WHERE Staff_ID = @staff_ID AND Date = @currentDate",
                   new { staff_ID, currentDate });
 
-                return attendanceHistory;
+                // Create a new instance with converted times
+                return new Attendance_History
+                {
+                    Staff_ID = attendanceHistory.Staff_ID,
+                    EntryTime = attendanceHistory.EntryTime,
+                    ExitTime = attendanceHistory.ExitTime,
+                    Date = attendanceHistory.Date,
+                    Month = attendanceHistory.Month,
+                    Year = attendanceHistory.Year,
+                    CheckinStatus = attendanceHistory.CheckinStatus
+                };
             }
             catch (Exception ex)
             {
