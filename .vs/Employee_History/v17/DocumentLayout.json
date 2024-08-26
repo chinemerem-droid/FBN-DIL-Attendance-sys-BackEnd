@@ -3,6 +3,10 @@
   "WorkspaceRootPath": "C:\\Users\\Bot Peter\\Documents\\GitHub\\FBN-DIL-Attendance-sys-BackEnd\\",
   "Documents": [
     {
+      "AbsoluteMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|c:\\users\\bot peter\\documents\\github\\fbn-dil-attendance-sys-backend\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|solutionrelative:program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|c:\\users\\bot peter\\documents\\github\\fbn-dil-attendance-sys-backend\\dapparepo\\dapperuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{25AACFAD-CAFF-4EA8-BDBB-6240F4949A44}|Employee_History.csproj|solutionrelative:dapparepo\\dapperuser.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
@@ -18,8 +22,21 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 6,
+          "SelectedChildIndex": 0,
           "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Bot Peter\\Documents\\GitHub\\FBN-DIL-Attendance-sys-BackEnd\\Program.cs",
+              "RelativeDocumentMoniker": "Program.cs",
+              "ToolTip": "C:\\Users\\Bot Peter\\Documents\\GitHub\\FBN-DIL-Attendance-sys-BackEnd\\Program.cs",
+              "RelativeToolTip": "Program.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABEAAAABAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-08-15T12:33:18.087Z",
+              "EditorCaption": ""
+            },
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{a80febb4-e7e0-4147-b476-21aaf2453969}"
@@ -41,25 +58,21 @@
               "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
             },
             {
-              "$type": "Bookmark",
-              "Name": "ST:0:0:{d84ee353-0bef-5a41-a649-8f89aca5d84d}"
-            },
-            {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "DapperUser.cs",
               "DocumentMoniker": "C:\\Users\\Bot Peter\\Documents\\GitHub\\FBN-DIL-Attendance-sys-BackEnd\\DappaRepo\\DapperUser.cs",
               "RelativeDocumentMoniker": "DappaRepo\\DapperUser.cs",
               "ToolTip": "C:\\Users\\Bot Peter\\Documents\\GitHub\\FBN-DIL-Attendance-sys-BackEnd\\DappaRepo\\DapperUser.cs",
               "RelativeToolTip": "DappaRepo\\DapperUser.cs",
-              "ViewState": "AQIAAHYBAAAAAAAAAAAQwEUAAAAJAAAA",
+              "ViewState": "AQIAACwAAAAAtKG2wschwBQAAAAXAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2024-08-05T10:45:40.224Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 2,
               "Title": "UserController.cs",
               "DocumentMoniker": "C:\\Users\\Bot Peter\\Documents\\GitHub\\FBN-DIL-Attendance-sys-BackEnd\\Controllers\\UserController.cs",
               "RelativeDocumentMoniker": "Controllers\\UserController.cs",
@@ -67,8 +80,11 @@
               "RelativeToolTip": "Controllers\\UserController.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAACABAABLAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-25T20:34:32.805Z",
-              "EditorCaption": ""
+              "WhenOpened": "2024-06-25T20:34:32.805Z"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d84ee353-0bef-5a41-a649-8f89aca5d84d}"
             }
           ]
         }

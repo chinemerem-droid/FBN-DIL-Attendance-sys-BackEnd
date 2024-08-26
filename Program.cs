@@ -15,7 +15,7 @@ builder.Services.AddControllers();
 
 // Read CORS settings from appsettings.json
 var corsSettings = builder.Configuration.GetSection("CorsSettings").Get<CorsSettings>();
-
+ 
 // Configure CORS using settings from appsettings.json
 builder.Services.AddCors(options =>
 {
