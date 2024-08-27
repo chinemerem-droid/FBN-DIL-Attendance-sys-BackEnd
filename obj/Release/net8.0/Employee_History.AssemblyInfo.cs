@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Employee_History")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0ba126061c708d1cc42485220a583f4d684be1aa")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+bc235aa6411c49979885ff772ecddd0cf125a8b3")]
 [assembly: System.Reflection.AssemblyProductAttribute("Employee_History")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Employee_History")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
