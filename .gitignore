@@ -1,5 +1,19 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# .NET build output
+bin/
+obj/
+*.user
+
+# secrets — never commit
+appsettings.Local.json
+.env
+.env.*
+
+# IDE
+.vs/
+.DS_Store
+
 # dependencies
 /node_modules
 /.pnp
@@ -10,14 +24,6 @@
 
 # production
 /build
-.vs/
-
-# misc
-.DS_Store
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
 
 npm-debug.log*
 yarn-debug.log*

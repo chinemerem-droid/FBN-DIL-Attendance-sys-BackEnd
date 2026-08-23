@@ -1,3 +1,0 @@
-﻿<Project>
-  <Import Project="..\build\Employee_History.props" />
-</Project>

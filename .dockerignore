@@ -1,0 +1,9 @@
+bin/
+obj/
+.git/
+.vs/
+appsettings.Local.json
+*.user
+Database/
+docs/
+*.md
